@@ -1,1 +1,108 @@
-<p>home works!</p>
+<div class="max-w-7xl mx-auto">
+    <!-- Welcome Header -->
+    <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6 mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-primary-900 mb-2">
+                    Welcome back, {{ authService.user()?.name }}!
+                </h1>
+                <p class="text-primary-600">
+                    Here's what's happening with your account today.
+                </p>
+            </div>
+            <div class="hidden md:block">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center">
+                    <img src="assets/icons/home.svg" alt="Home" class="w-8 h-8 text-white" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-success-100 rounded-lg">
+                    <img src="assets/icons/shopping-bag.svg" alt="Orders" class="w-6 h-6 text-success-600" />
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-primary-600">Total Orders</p>
+                    <p class="text-2xl font-bold text-primary-900">24</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-info-100 rounded-lg">
+                    <img src="assets/icons/package.svg" alt="Pending" class="w-6 h-6 text-info-600" />
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-primary-600">Pending</p>
+                    <p class="text-2xl font-bold text-primary-900">3</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-warning-100 rounded-lg">
+                    <img src="assets/icons/money.svg" alt="Total Spent" class="w-6 h-6 text-warning-600" />
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-primary-600">Total Spent</p>
+                    <p class="text-2xl font-bold text-primary-900">$1,234</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-tertiary-100 rounded-lg">
+                    <img src="assets/icons/heart.svg" alt="Favorites" class="w-6 h-6 text-tertiary-600" />
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-primary-600">Favorites</p>
+                    <p class="text-2xl font-bold text-primary-900">12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-xl shadow-sm border border-primary-200 p-6">
+        <h2 class="text-xl font-bold text-primary-900 mb-4">Recent Activity</h2>
+        <div class="space-y-4">
+            <div class="flex items-center p-4 bg-primary-50 rounded-lg">
+                <div class="p-2 bg-success-100 rounded-full">
+                    <img src="assets/icons/success.svg" alt="Success" class="w-4 h-4 text-success-600" />
+                </div>
+                <div class="ml-4 flex-1">
+                    <p class="text-sm font-medium text-primary-900">Order #1234 delivered</p>
+                    <p class="text-xs text-primary-600">2 hours ago</p>
+                </div>
+            </div>
+
+            <div class="flex items-center p-4 bg-primary-50 rounded-lg">
+                <div class="p-2 bg-info-100 rounded-full">
+                    <img src="assets/icons/grid.svg" alt="Info" class="w-4 h-4 text-info-600" />
+                </div>
+                <div class="ml-4 flex-1">
+                    <p class="text-sm font-medium text-primary-900">New product added to wishlist</p>
+                    <p class="text-xs text-primary-600">1 day ago</p>
+                </div>
+            </div>
+
+            <div class="flex items-center p-4 bg-primary-50 rounded-lg">
+                <div class="p-2 bg-warning-100 rounded-full">
+                    <img src="assets/icons/warning.svg" alt="Warning" class="w-4 h-4 text-warning-600" />
+                </div>
+                <div class="ml-4 flex-1">
+                    <p class="text-sm font-medium text-primary-900">Payment method expires soon</p>
+                    <p class="text-xs text-primary-600">3 days ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

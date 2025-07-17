@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { InputFieldComponent } from '../../../components/input-field/input-field.component';
 import { ButtonComponent } from '../../../components/button/button.component';
 import { AuthService } from '../../../common/services/auth.service';
+import { ToasterService } from '../../../common/services/toaster.service';
 import { SigninRequest } from '../../../common/models/user.model';
 
 @Component({
@@ -29,11 +30,10 @@ export class SigninComponent implements OnInit {
   formTouched = false;
   errorMessage = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private toaster = inject(ToasterService);
 
   ngOnInit(): void {
     this.signinForm = this.fb.group({
@@ -54,12 +54,14 @@ export class SigninComponent implements OnInit {
       this.authService.signin(signinData).subscribe({
         next: (response) => {
           console.log('Signin successful:', response);
+          this.toaster.show(`Welcome back, ${response.user.name}!`, 'success');
           this.router.navigate(['/home']);
         },
         error: (error) => {
           console.error('Signin error:', error);
           this.errorMessage =
             error.error?.message || 'Signin failed. Please try again.';
+          this.toaster.show(this.errorMessage, 'error');
           this.isSubmitting = false;
         },
         complete: () => {
@@ -68,6 +70,10 @@ export class SigninComponent implements OnInit {
       });
     } else {
       this.signinForm.markAllAsTouched();
+      this.toaster.show(
+        'Please fill in all required fields correctly',
+        'warning'
+      );
     }
   }
 

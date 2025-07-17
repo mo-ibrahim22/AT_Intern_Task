@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { InputFieldComponent } from '../../../components/input-field/input-field.component';
 import { ButtonComponent } from '../../../components/button/button.component';
 import { AuthService } from '../../../common/services/auth.service';
+import { ToasterService } from '../../../common/services/toaster.service';
+import { ConfirmationService } from '../../../common/services/confirmation.service';
 import { SignupRequest } from '../../../common/models/user.model';
 
 @Component({
@@ -31,11 +33,11 @@ export class SignupComponent implements OnInit {
   formTouched = false;
   errorMessage = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private toaster = inject(ToasterService);
+  private confirmation = inject(ConfirmationService);
 
   ngOnInit(): void {
     this.signupForm = this.fb.group(
@@ -64,28 +66,50 @@ export class SignupComponent implements OnInit {
   onSubmit(): void {
     this.formTouched = true;
     this.errorMessage = '';
-    if (this.signupForm.valid) {
-      this.isSubmitting = true;
 
+    if (this.signupForm.valid) {
+      this.handleSignup();
+    } else {
+      this.signupForm.markAllAsTouched();
+      this.toaster.show(
+        'Please fill in all required fields correctly',
+        'warning'
+      );
+    }
+  }
+
+  private async handleSignup(): Promise<void> {
+    const confirmed = await this.confirmation.confirm({
+      title: 'Create Account',
+      message: 'Are you sure you want to create this account?',
+      confirmText: 'Create Account',
+      cancelText: 'Cancel',
+    });
+
+    if (confirmed) {
+      this.isSubmitting = true;
       const signupData: SignupRequest = this.signupForm.value;
 
       this.authService.signup(signupData).subscribe({
         next: (response) => {
           console.log('signup successful:', response);
+          this.toaster.show(
+            'Account created successfully! Please sign in.',
+            'success'
+          );
           this.router.navigate(['/signin']);
         },
         error: (error) => {
           console.error('signup error:', error);
           this.errorMessage =
             error.error?.message || 'signup failed. Please try again.';
+          this.toaster.show(this.errorMessage, 'error');
           this.isSubmitting = false;
         },
         complete: () => {
           this.isSubmitting = false;
         },
       });
-    } else {
-      this.signupForm.markAllAsTouched();
     }
   }
 

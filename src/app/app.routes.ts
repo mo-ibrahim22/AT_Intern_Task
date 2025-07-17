@@ -1,11 +1,14 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './common/guards/auth.guard';
-import { HomeComponent } from './pages/home/home.component';
-import { SignupComponent } from './pages/auth/signup/signup.component';
-import { SigninComponent } from './pages/auth/signin/signin.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: '/signin', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
+    canActivate: [authGuard],
+  },
   {
     path: 'signup',
     loadComponent: () =>
@@ -19,5 +22,15 @@ export const routes: Routes = [
       import('./pages/auth/signin/signin.component').then(
         (m) => m.SigninComponent
       ),
+  },
+  {
+    path: 'products',
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    redirectTo: '/signin',
   },
 ];
