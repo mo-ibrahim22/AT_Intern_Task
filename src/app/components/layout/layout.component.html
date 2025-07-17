@@ -1,6 +1,6 @@
 <!-- Navbar Template -->
 <ng-template #navbarTemplate>
-    <nav class="bg-primary-800 text-white shadow-md fixed top-0 left-0 right-0 z-30">
+    <nav class="bg-primary-100 text-primary-900 shadow-md fixed top-0 left-0 right-0 z-30">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <!-- Logo and Mobile Menu Button -->
             <div class="flex items-center space-x-4">
@@ -8,7 +8,7 @@
                 <button class="lg:hidden text-white focus:outline-none" (click)="toggleMobileSidebar()">
                     <img src="assets/icons/menu.svg" alt="Menu" class="w-6 h-6" />
                 </button>
-                <a routerLink="/home" class="text-2xl font-bold">ShopEase</a>
+                <a routerLink="/home" class="text-2xl font-bold">AT_Task</a>
             </div>
 
             <!-- Desktop Navigation -->
@@ -132,7 +132,7 @@
 <!-- Confirmation Template -->
 <ng-template #confirmationTemplate>
     @if (confirmation.isOpen()) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/75  p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
             <div class="flex items-center mb-4">
                 <div class="flex-shrink-0">

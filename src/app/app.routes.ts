@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './common/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/signin', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
     loadComponent: () =>
@@ -31,6 +31,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/signin',
+    redirectTo: '/home',
   },
 ];
