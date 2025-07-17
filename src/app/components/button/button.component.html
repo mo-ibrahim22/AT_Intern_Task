@@ -1,0 +1,53 @@
+<button [type]="type()" [disabled]="disabled() || loading()" [class]="baseClasses()" [ngClass]="iconGap()"
+    (click)="onClick($event)">
+
+    <!-- Loading State -->
+    @if (shouldShowLoading()) {
+    @if (loadingIconSrc()) {
+    <img [src]="loadingIconSrc()" [class]="loadingIconClass()" alt="Loading" />
+    } @else {
+    <!-- Default loading spinner -->
+    <img src="assets/icons/loading-spinner.svg" [class]="loadingIconClass()" alt="Loading" />
+    }
+    @if (shouldShowText()) {
+    <span>Loading...</span>
+    }
+    } @else {
+    <!-- Normal State Content -->
+
+    <!-- Left Icon or Center Icon (when no text) -->
+    @if (shouldShowIcon() && (iconPosition() === 'left' || (iconPosition() === 'center' && !shouldShowText()))) {
+    <img [src]="iconSrc()" [alt]="text() || 'Icon'" [class]="iconClass()" />
+    }
+
+    <!-- Text Content -->
+    @if (shouldShowText()) {
+    @if (iconPosition() === 'between' && shouldShowIcon() && shouldShowSecondaryIcon()) {
+    <!-- Icon - Text - Secondary Icon layout -->
+    <div class="flex items-center gap-1 md:gap-2 w-full">
+        <img [src]="iconSrc()" [alt]="'Left icon'" [class]="iconClass()" />
+        <span class="flex-1">{{ text() }}</span>
+        <img [src]="secondaryIconSrc()" [alt]="'Right icon'" [class]="secondaryIconClass()" />
+    </div>
+    } @else {
+    <!-- Regular text -->
+    <span>{{ text() }}</span>
+    }
+    }
+
+    <!-- Right Icon -->
+    @if (shouldShowIcon() && iconPosition() === 'right') {
+    <img [src]="iconSrc()" [alt]="text() || 'Icon'" [class]="iconClass()" />
+    }
+
+    <!-- Custom Content Projection -->
+    @if (customContent) {
+    <ng-container [ngTemplateOutlet]="customContent"></ng-container>
+    }
+    }
+
+    <!-- Badge/Counter -->
+    @if (shouldShowBadge()) {
+    <span [class]="badgeClass()">{{ badge() }}</span>
+    }
+</button>

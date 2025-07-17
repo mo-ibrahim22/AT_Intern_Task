@@ -1,0 +1,30 @@
+/* Add this to your global styles */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Ensure proper spacing when sidebar is present */
+main {
+  transition: margin-left 0.3s ease;
+}
+
+/* Active route styling */
+.router-link-active {
+  @apply bg-primary-100 text-primary-800 font-medium;
+}
+
+/* Animation for mobile sidebar */
+.transform {
+  transition: transform 0.3s ease;
+}

@@ -1,0 +1,97 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div
+                class="mx-auto w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-primary-900 mb-2">Create Account</h1>
+            <p class="text-primary-600">Join us today and get started</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-8">
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                <!-- Basic Information -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-primary-900 mb-4 flex items-center">
+                        <app-button [text]="'1'" iconPosition="center" [shape]="'circle'"
+                            customClass="w-6 h-6 text-white text-sm font-bold bg-primary-600 mr-3">
+                        </app-button>
+                        Basic Information
+                    </h3>
+
+                    <app-input-field [formGroup]="signupForm" controlName="name" label="Full Name" type="text"
+                        placeholder="Enter your full name">
+                    </app-input-field>
+
+                    <app-input-field [formGroup]="signupForm" controlName="email" label="Email Address" type="email"
+                        placeholder="Enter your email address">
+                    </app-input-field>
+
+                    <app-input-field [formGroup]="signupForm" controlName="password" label="Password" type="password"
+                        placeholder="Create a password">
+                    </app-input-field>
+
+                    <app-input-field [formGroup]="signupForm" controlName="rePassword" label="Confirm Password"
+                        type="password" placeholder="Confirm your password">
+                    </app-input-field>
+
+                    <!-- Password Match Error -->
+                    @if (signupForm.hasError('passwordMismatch') && (signupForm.get('rePassword')?.touched ||
+                    signupForm.get('password')?.touched)) {
+                    <div class="mb-4 flex items-center">
+                        <svg class="h-4 w-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-600 text-sm font-medium">
+                            Passwords do not match
+                        </span>
+                    </div>
+                    }
+
+                    <app-input-field [formGroup]="signupForm" controlName="phone" label="Phone Number" type="tel"
+                        placeholder="Enter your phone number (11 digits)">
+                    </app-input-field>
+                </div>
+
+                <!-- Error Message -->
+                @if (errorMessage) {
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-700 font-medium">{{ errorMessage }}</span>
+                    </div>
+                </div>
+                }
+
+                <!-- Submit Button -->
+                <app-button type="submit" text="Create Account" size="lg"
+                    customClass="w-full bg-gradient-to-r from-secondary-500 to-secondary-600 text-white hover:from-secondary-600 hover:to-secondary-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                    [disabled]="formTouched && (signupForm.invalid || isSubmitting)" [loading]="isSubmitting">
+                </app-button>
+            </form>
+
+            <!-- Sign In Link -->
+            <div class="mt-8 text-center">
+                <p class="text-primary-600">
+                    Already have an account?
+                    <button (click)="navigateToSignin()"
+                        class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
+                        Sign in here
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
