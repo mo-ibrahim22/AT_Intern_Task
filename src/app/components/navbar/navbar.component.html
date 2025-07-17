@@ -3,9 +3,9 @@
         <!-- Logo and Mobile Menu Button -->
         <div class="flex items-center space-x-4">
             <!-- Mobile menu button (hidden on lg screens) -->
-            <button class="lg:hidden text-white focus:outline-none" (click)="onToggleMobileSidebar()">
-                <img src="assets/icons/menu.svg" alt="Menu" class="w-6 h-6" />
-            </button>
+            <app-button variant="ghost" iconSrc="assets/icons/menu.svg" [iconOnly]="true"
+                customClass="lg:hidden text-primary-900 hover:bg-primary-200" (clicked)="onToggleMobileSidebar()">
+            </app-button>
             <a routerLink="/home" class="text-2xl font-bold">AT_Task</a>
         </div>
 
@@ -22,20 +22,19 @@
         <!-- User Actions -->
         <div class="flex items-center space-x-4">
             <!-- Cart Icon -->
-            <button class="relative">
-                <img src="assets/icons/cart.svg" alt="Cart" class="w-6 h-6" />
-                <span
-                    class="absolute -top-2 -right-2 bg-danger-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-            </button>
+            <app-button variant="ghost" iconSrc="assets/icons/cart.svg" [iconOnly]="true" badge="3"
+                customClass="text-primary-900 hover:bg-primary-200">
+            </app-button>
 
             <!-- User Menu -->
             <div class="flex items-center space-x-3">
                 <span class="hidden md:block text-sm">{{ user()?.name }}</span>
-                <button (click)="onLogout()"
-                    class="flex items-center space-x-1 hover:text-primary-600 transition-colors">
-                    <img src="assets/icons/logout.svg" alt="Logout" class="w-5 h-5" />
-                    <span class="hidden md:block text-sm">Logout</span>
-                </button>
+                <app-button variant="ghost" iconSrc="assets/icons/logout.svg" text="Logout" size="sm"
+                    customClass="text-primary-900 hover:bg-primary-200 hidden md:flex" (clicked)="onLogout()">
+                </app-button>
+                <app-button variant="ghost" iconSrc="assets/icons/logout.svg" [iconOnly]="true"
+                    customClass="text-primary-900 hover:bg-primary-200 md:hidden" (clicked)="onLogout()">
+                </app-button>
             </div>
         </div>
     </div>

@@ -28,9 +28,9 @@
                             class="w-4 h-4 text-primary-600 bg-primary-50 border-primary-300 rounded focus:ring-primary-500 focus:ring-2">
                         <span class="ml-2 text-sm text-primary-700">Remember me</span>
                     </label>
-                    <a href="#" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
-                        Forgot password?
-                    </a>
+                    <app-button variant="link" text="Forgot password?" size="sm"
+                        customClass="text-primary-600 hover:text-primary-700 font-medium">
+                    </app-button>
                 </div>
 
                 <!-- Error Message -->
@@ -76,10 +76,10 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Don't have an account?
-                    <button (click)="navigateToSignup()"
-                        class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
-                        Sign up for free
-                    </button>
+                    <app-button variant="link" text="Sign up for free" size="sm"
+                        customClass="text-primary-700 hover:text-primary-800 font-semibold ml-1"
+                        (clicked)="navigateToSignup()">
+                    </app-button>
                 </p>
             </div>
         </div>

@@ -10,7 +10,7 @@
     <img src="assets/icons/loading-spinner.svg" [class]="loadingIconClass()" alt="Loading" />
     }
     @if (shouldShowText()) {
-    <span>Loading...</span>
+    <span>{{ displayText() }}</span>
     }
     } @else {
     <!-- Normal State Content -->
@@ -26,12 +26,12 @@
     <!-- Icon - Text - Secondary Icon layout -->
     <div class="flex items-center gap-1 md:gap-2 w-full">
         <img [src]="iconSrc()" [alt]="'Left icon'" [class]="iconClass()" />
-        <span class="flex-1">{{ text() }}</span>
+        <span class="flex-1">{{ displayText() }}</span>
         <img [src]="secondaryIconSrc()" [alt]="'Right icon'" [class]="secondaryIconClass()" />
     </div>
     } @else {
     <!-- Regular text -->
-    <span>{{ text() }}</span>
+    <span>{{ displayText() }}</span>
     }
     }
 

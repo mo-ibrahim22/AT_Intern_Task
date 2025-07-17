@@ -13,8 +13,7 @@
         <!-- Custom Template Content -->
         @if (hasCustomTemplate()) {
         <div class="mb-6">
-            <ng-container 
-                [ngTemplateOutlet]="config()!.customTemplate!" 
+            <ng-container [ngTemplateOutlet]="config()!.customTemplate!"
                 [ngTemplateOutletContext]="getTemplateContext()">
             </ng-container>
         </div>
@@ -26,16 +25,13 @@
         }
 
         <div class="flex justify-end space-x-3">
-            <button
-                class="px-4 py-2 rounded-lg border border-secondary-300 text-secondary-700 hover:bg-secondary-50 transition-colors"
-                (click)="onResponse(false)">
-                {{ config()?.cancelText || 'Cancel' }}
-            </button>
+            <app-button variant="outline" [text]="config()?.cancelText || 'Cancel'"
+                customClass="border-secondary-300 text-secondary-700 hover:bg-secondary-50"
+                (clicked)="onResponse(false)">
+            </app-button>
 
-            <button class="px-4 py-2 rounded-lg bg-danger-500 text-white hover:bg-danger-600 transition-colors"
-                (click)="onResponse(true)">
-                {{ config()?.confirmText || 'Confirm' }}
-            </button>
+            <app-button variant="danger" [text]="config()?.confirmText || 'Confirm'" (clicked)="onResponse(true)">
+            </app-button>
         </div>
     </div>
 </div>

@@ -75,10 +75,10 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Already have an account?
-                    <button (click)="navigateToSignin()"
-                        class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
-                        Sign in here
-                    </button>
+                    <app-button variant="link" text="Sign in here" size="sm"
+                        customClass="text-primary-700 hover:text-primary-800 font-semibold ml-1"
+                        (clicked)="navigateToSignin()">
+                    </app-button>
                 </p>
             </div>
         </div>

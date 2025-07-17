@@ -1,11 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../button/button.component';
 import { Toast } from '../../common/models/toast.model';
 
 @Component({
   selector: 'app-toaster',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './toaster.component.html',
   styleUrl: './toaster.component.css',
 })
