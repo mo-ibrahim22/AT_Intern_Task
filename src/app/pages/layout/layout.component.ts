@@ -1,4 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { ToasterService } from '../../common/services/toaster.service';
 import { ConfirmationService } from '../../common/services/confirmation.service';
 import { AuthService } from '../../common/services/auth.service';
@@ -9,6 +15,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { ToasterComponent } from '../../components/toaster/toaster.component';
 import { ConfirmationModalComponent } from '../../components/confirmation-modal/confirmation-modal.component';
+
 
 @Component({
   selector: 'app-layout',
@@ -24,6 +31,9 @@ import { ConfirmationModalComponent } from '../../components/confirmation-modal/
   styleUrl: './layout.component.css',
 })
 export class LayoutComponent {
+  @ViewChild('logoutConfirmTemplate', { static: true })
+  logoutConfirmTemplate!: TemplateRef<any>;
+
   toaster = inject(ToasterService);
   confirmation = inject(ConfirmationService);
   authService = inject(AuthService);
@@ -49,19 +59,25 @@ export class LayoutComponent {
   }
 
   logout(): void {
-    this.confirmation.confirm(
-      {
-        title: 'Confirm Logout',
-        message: 'Are you sure you want to logout?',
-        confirmText: 'Logout',
-        cancelText: 'Cancel',
-      },
+    const userData = {
+      name: this.authService.user()?.name,
+      email: this.authService.user()?.email,
+    };
+
+    this.confirmation.confirmWithTemplate(
+      'Confirm Logout',
+      this.logoutConfirmTemplate,
       (confirmed: boolean) => {
         if (confirmed) {
           this.authService.logout();
           this.toaster.show('Successfully logged out', 'success');
           this.router.navigate(['/signin']);
         }
+      },
+      {
+        confirmText: 'Logout',
+        cancelText: 'Stay Logged In',
+        data: userData,
       }
     );
   }

@@ -10,9 +10,20 @@
             </h3>
         </div>
 
+        <!-- Custom Template Content -->
+        @if (hasCustomTemplate()) {
+        <div class="mb-6">
+            <ng-container 
+                [ngTemplateOutlet]="config()!.customTemplate!" 
+                [ngTemplateOutletContext]="getTemplateContext()">
+            </ng-container>
+        </div>
+        } @else {
+        <!-- Default Message Content -->
         <p class="text-secondary-600 mb-6">
             {{ config()?.message }}
         </p>
+        }
 
         <div class="flex justify-end space-x-3">
             <button

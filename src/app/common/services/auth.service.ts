@@ -45,7 +45,7 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/api/v1/auth/signup`, signupData)
       .pipe(
-        tap((response) => this.handleAuthSuccess(response)),
+        tap(() => this.isLoadingSignal.set(false)),
         catchError((error) => {
           this.isLoadingSignal.set(false);
           return throwError(() => error);

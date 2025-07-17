@@ -18,4 +18,15 @@ export class ConfirmationModalComponent {
   onResponse(confirmed: boolean): void {
     this.response.emit(confirmed);
   }
+
+  hasCustomTemplate(): boolean {
+    return !!this.config()?.customTemplate;
+  }
+
+  getTemplateContext(): any {
+    return {
+      $implicit: this.config()?.data,
+      data: this.config()?.data,
+    };
+  }
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -32,6 +38,9 @@ export class SignupComponent implements OnInit {
   isSubmitting = false;
   formTouched = false;
   errorMessage = '';
+
+  @ViewChild('customConfirmTemplate', { static: true })
+  customConfirmTemplate!: TemplateRef<any>;
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -79,13 +88,15 @@ export class SignupComponent implements OnInit {
   }
 
   private handleSignup(): void {
-    this.confirmation.confirm(
-      {
-        title: 'Create Account',
-        message: 'Are you sure you want to create this account?',
-        confirmText: 'Create Account',
-        cancelText: 'Cancel',
-      },
+    // Example using custom template
+    const userData = {
+      name: this.signupForm.get('name')?.value,
+      email: this.signupForm.get('email')?.value,
+    };
+
+    this.confirmation.confirmWithTemplate(
+      'Create Account',
+      this.customConfirmTemplate,
       (confirmed: boolean) => {
         if (confirmed) {
           this.isSubmitting = true;
@@ -112,6 +123,11 @@ export class SignupComponent implements OnInit {
             },
           });
         }
+      },
+      {
+        confirmText: 'Create Account',
+        cancelText: 'Cancel',
+        data: userData,
       }
     );
   }

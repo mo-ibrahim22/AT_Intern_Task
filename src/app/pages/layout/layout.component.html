@@ -33,3 +33,31 @@
 <app-confirmation-modal [isOpen]="confirmation.isOpen()" [config]="confirmation.config()"
     (response)="onConfirmationResponse($event)">
 </app-confirmation-modal>
+
+<!-- Custom Logout Confirmation Template -->
+<ng-template #logoutConfirmTemplate let-data>
+    <div class="space-y-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                <img src="assets/icons/user.svg" alt="User" class="w-6 h-6 text-primary-600" />
+            </div>
+            <div>
+                <p class="font-medium text-primary-900">{{ data?.name }}</p>
+                <p class="text-sm text-primary-600">{{ data?.email }}</p>
+            </div>
+        </div>
+
+        <p class="text-secondary-600">
+            You will be signed out of your account. Any unsaved changes will be lost.
+        </p>
+
+        <div class="bg-warning-50 border border-warning-200 rounded-lg p-3">
+            <div class="flex items-center">
+                <img src="assets/icons/warning.svg" alt="Warning" class="w-4 h-4 text-warning-600 mr-2" />
+                <p class="text-sm text-warning-700">
+                    Make sure to save your work before logging out.
+                </p>
+            </div>
+        </div>
+    </div>
+</ng-template>

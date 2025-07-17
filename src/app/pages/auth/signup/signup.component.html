@@ -83,4 +83,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Custom Confirmation Template -->
+    <ng-template #customConfirmTemplate let-data>
+        <div class="space-y-4">
+            <p class="text-secondary-600">
+                You are about to create an account with the following details:
+            </p>
+
+            <div class="bg-primary-50 rounded-lg p-4 space-y-2">
+                <div class="flex justify-between">
+                    <span class="font-medium text-primary-700">Name:</span>
+                    <span class="text-primary-900">{{ data?.name }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-primary-700">Email:</span>
+                    <span class="text-primary-900">{{ data?.email }}</span>
+                </div>
+            </div>
+
+            <p class="text-sm text-secondary-500">
+                Please review the information above and confirm to proceed.
+            </p>
+        </div>
+    </ng-template>
 </div>
