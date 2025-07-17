@@ -3,8 +3,8 @@ import { TemplateRef } from '@angular/core';
 export interface ConfirmationConfig {
   title: string;
   message?: string;
-  customTemplate?: TemplateRef<any>;
+  customTemplate?: TemplateRef<unknown>;
   confirmText?: string;
   cancelText?: string;
-  data?: any; // Additional data to pass to the template
+  data?: unknown; // Additional data to pass to the template
 }
