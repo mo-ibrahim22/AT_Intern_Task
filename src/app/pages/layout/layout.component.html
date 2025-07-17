@@ -1,0 +1,35 @@
+<!-- Main Layout Structure (only shown when authenticated) -->
+@if (authService.isAuthenticated()) {
+<div class="min-h-screen bg-primary-50">
+    <!-- Navbar -->
+    <app-navbar [navItems]="navItems()" [user]="authService.user()" (toggleMobileSidebar)="toggleMobileSidebar()"
+        (logout)="logout()">
+    </app-navbar>
+
+    <!-- Sidebar -->
+    <app-sidebar [navItems]="navItems()" [isMobileSidebarOpen]="isMobileSidebarOpen()"
+        (toggleMobileSidebar)="toggleMobileSidebar()">
+    </app-sidebar>
+
+    <!-- Main Content -->
+    <main class="lg:ml-64 pt-16 min-h-screen">
+        <div class="container mx-auto px-4 py-6">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+</div>
+}
+
+<!-- Show router outlet without layout for non-authenticated users -->
+@if (!authService.isAuthenticated()) {
+<router-outlet></router-outlet>
+}
+
+<!-- Toaster -->
+<app-toaster [toasts]="toaster.toasts()" (dismiss)="onToasterDismiss($event)">
+</app-toaster>
+
+<!-- Confirmation Modal -->
+<app-confirmation-modal [isOpen]="confirmation.isOpen()" [config]="confirmation.config()"
+    (response)="onConfirmationResponse($event)">
+</app-confirmation-modal>

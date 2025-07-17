@@ -1,0 +1,4 @@
+/* Active route styling */
+.router-link-active {
+  @apply bg-primary-100 text-primary-800 font-medium;
+}

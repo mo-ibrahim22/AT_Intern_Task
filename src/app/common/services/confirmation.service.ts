@@ -12,16 +12,13 @@ export class ConfirmationService {
   public isOpen = this._isOpen.asReadonly();
   public config = this._config.asReadonly();
 
-  async confirm(config: ConfirmationConfig): Promise<boolean> {
+  confirm(config: ConfirmationConfig, callback: (confirmed: boolean) => void): void {
     this._config.set(config);
     this._isOpen.set(true);
-
-    return new Promise<boolean>((resolve) => {
-      this._resolveFn = resolve;
-    });
+    this._resolveFn = callback;
   }
 
-  handleResponse(confirmed: boolean) {
+  handleResponse(confirmed: boolean): void {
     if (this._resolveFn) {
       this._resolveFn(confirmed);
       this._resolveFn = null;

@@ -1,0 +1,4 @@
+/* Ensure proper spacing when sidebar is present */
+main {
+  transition: margin-left 0.3s ease;
+}

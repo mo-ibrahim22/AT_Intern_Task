@@ -1,0 +1,31 @@
+@if (isOpen()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/75 p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
+        <div class="flex items-center mb-4">
+            <div class="flex-shrink-0">
+                <img src="assets/icons/warning.svg" alt="Warning" class="w-6 h-6 text-warning-500" />
+            </div>
+            <h3 class="ml-3 text-xl font-bold text-primary-800">
+                {{ config()?.title }}
+            </h3>
+        </div>
+
+        <p class="text-secondary-600 mb-6">
+            {{ config()?.message }}
+        </p>
+
+        <div class="flex justify-end space-x-3">
+            <button
+                class="px-4 py-2 rounded-lg border border-secondary-300 text-secondary-700 hover:bg-secondary-50 transition-colors"
+                (click)="onResponse(false)">
+                {{ config()?.cancelText || 'Cancel' }}
+            </button>
+
+            <button class="px-4 py-2 rounded-lg bg-danger-500 text-white hover:bg-danger-600 transition-colors"
+                (click)="onResponse(true)">
+                {{ config()?.confirmText || 'Confirm' }}
+            </button>
+        </div>
+    </div>
+</div>
+}

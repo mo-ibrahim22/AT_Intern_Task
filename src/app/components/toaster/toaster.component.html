@@ -1,0 +1,32 @@
+<div class="fixed bottom-4 right-4 z-50 space-y-3 w-80">
+    @for (toast of toasts(); track toast.id) {
+    <div class="p-4 rounded-lg shadow-lg text-white animate-fade-in transform transition-all duration-300"
+        [class.bg-success-500]="toast.type === 'success'" [class.bg-danger-500]="toast.type === 'error'"
+        [class.bg-warning-500]="toast.type === 'warning'" [class.bg-info-500]="toast.type === 'info'">
+        <div class="flex justify-between items-start">
+            <div class="flex items-center">
+                <!-- Success Icon -->
+                @if (toast.type === 'success') {
+                <img src="assets/icons/success.svg" alt="Success" class="w-5 h-5 mr-2" />
+                }
+                <!-- Error Icon -->
+                @if (toast.type === 'error') {
+                <img src="assets/icons/error.svg" alt="Error" class="w-5 h-5 mr-2" />
+                }
+                <!-- Warning Icon -->
+                @if (toast.type === 'warning') {
+                <img src="assets/icons/warning.svg" alt="Warning" class="w-5 h-5 mr-2" />
+                }
+                <!-- Info Icon -->
+                @if (toast.type === 'info') {
+                <img src="assets/icons/info.svg" alt="Info" class="w-5 h-5 mr-2" />
+                }
+                <p class="flex-1">{{ toast.message }}</p>
+            </div>
+            <button class="ml-2 text-white hover:text-white/80 transition-colors" (click)="onDismiss(toast.id)">
+                <img src="assets/icons/close.svg" alt="Close" class="w-4 h-4" />
+            </button>
+        </div>
+    </div>
+    }
+</div>

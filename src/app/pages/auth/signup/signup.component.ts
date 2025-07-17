@@ -78,39 +78,42 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  private async handleSignup(): Promise<void> {
-    const confirmed = await this.confirmation.confirm({
-      title: 'Create Account',
-      message: 'Are you sure you want to create this account?',
-      confirmText: 'Create Account',
-      cancelText: 'Cancel',
-    });
+  private handleSignup(): void {
+    this.confirmation.confirm(
+      {
+        title: 'Create Account',
+        message: 'Are you sure you want to create this account?',
+        confirmText: 'Create Account',
+        cancelText: 'Cancel',
+      },
+      (confirmed: boolean) => {
+        if (confirmed) {
+          this.isSubmitting = true;
+          const signupData: SignupRequest = this.signupForm.value;
 
-    if (confirmed) {
-      this.isSubmitting = true;
-      const signupData: SignupRequest = this.signupForm.value;
-
-      this.authService.signup(signupData).subscribe({
-        next: (response) => {
-          console.log('signup successful:', response);
-          this.toaster.show(
-            'Account created successfully! Please sign in.',
-            'success'
-          );
-          this.router.navigate(['/signin']);
-        },
-        error: (error) => {
-          console.error('signup error:', error);
-          this.errorMessage =
-            error.error?.message || 'signup failed. Please try again.';
-          this.toaster.show(this.errorMessage, 'error');
-          this.isSubmitting = false;
-        },
-        complete: () => {
-          this.isSubmitting = false;
-        },
-      });
-    }
+          this.authService.signup(signupData).subscribe({
+            next: (response) => {
+              console.log('signup successful:', response);
+              this.toaster.show(
+                'Account created successfully! Please sign in.',
+                'success'
+              );
+              this.router.navigate(['/signin']);
+            },
+            error: (error) => {
+              console.error('signup error:', error);
+              this.errorMessage =
+                error.error?.message || 'signup failed. Please try again.';
+              this.toaster.show(this.errorMessage, 'error');
+              this.isSubmitting = false;
+            },
+            complete: () => {
+              this.isSubmitting = false;
+            },
+          });
+        }
+      }
+    );
   }
 
   navigateToSignin(): void {

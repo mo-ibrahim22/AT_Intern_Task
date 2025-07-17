@@ -1,0 +1,76 @@
+import { Component, inject, signal } from '@angular/core';
+import { ToasterService } from '../../common/services/toaster.service';
+import { ConfirmationService } from '../../common/services/confirmation.service';
+import { AuthService } from '../../common/services/auth.service';
+import { RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NavItem } from '../../common/models/navigation.model';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+import { ToasterComponent } from '../../components/toaster/toaster.component';
+import { ConfirmationModalComponent } from '../../components/confirmation-modal/confirmation-modal.component';
+
+@Component({
+  selector: 'app-layout',
+  imports: [
+    RouterModule,
+    CommonModule,
+    NavbarComponent,
+    SidebarComponent,
+    ToasterComponent,
+    ConfirmationModalComponent,
+  ],
+  templateUrl: './layout.component.html',
+  styleUrl: './layout.component.css',
+})
+export class LayoutComponent {
+  toaster = inject(ToasterService);
+  confirmation = inject(ConfirmationService);
+  authService = inject(AuthService);
+  router = inject(Router);
+
+  // Sidebar states
+  isMobileSidebarOpen = signal(false);
+  isDesktopSidebarCollapsed = signal(false);
+
+  navItems = signal<NavItem[]>([
+    { name: 'Home', path: '/home', icon: 'home' },
+    { name: 'Products', path: '/products', icon: 'shopping-bag' },
+    { name: 'Orders', path: '/orders', icon: 'package' },
+    { name: 'Account', path: '/account', icon: 'user' },
+  ]);
+
+  toggleMobileSidebar(): void {
+    this.isMobileSidebarOpen.update((open) => !open);
+  }
+
+  toggleDesktopSidebar(): void {
+    this.isDesktopSidebarCollapsed.update((collapsed) => !collapsed);
+  }
+
+  logout(): void {
+    this.confirmation.confirm(
+      {
+        title: 'Confirm Logout',
+        message: 'Are you sure you want to logout?',
+        confirmText: 'Logout',
+        cancelText: 'Cancel',
+      },
+      (confirmed: boolean) => {
+        if (confirmed) {
+          this.authService.logout();
+          this.toaster.show('Successfully logged out', 'success');
+          this.router.navigate(['/signin']);
+        }
+      }
+    );
+  }
+
+  onToasterDismiss(id: number): void {
+    this.toaster.dismiss(id);
+  }
+
+  onConfirmationResponse(confirmed: boolean): void {
+    this.confirmation.handleResponse(confirmed);
+  }
+}

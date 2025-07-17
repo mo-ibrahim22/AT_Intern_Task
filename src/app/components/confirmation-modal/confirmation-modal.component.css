@@ -1,0 +1,4 @@
+/* Modal animation styles */
+.transform {
+  transition: transform 0.3s ease;
+}
