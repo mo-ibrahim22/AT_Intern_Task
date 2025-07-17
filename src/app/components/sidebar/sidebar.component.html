@@ -16,13 +16,14 @@
 </aside>
 
 <!-- Mobile Sidebar (off-canvas) -->
-<div class="lg:hidden fixed inset-0 z-40" *ngIf="isMobileSidebarOpen()">
+@if (isMobileSidebarOpen()) {
+<div class="lg:hidden fixed inset-0 z-40">
     <!-- Overlay -->
     <div class="absolute inset-0 bg-primary-600/75" (click)="onToggleMobileSidebar()"></div>
 
     <!-- Sidebar Content -->
     <div class="relative h-full w-64 bg-primary-50 shadow-lg transform transition-transform duration-300 ease-in-out"
-        [class.translate-x-0]="isMobileSidebarOpen()" [class.-translate-x-full]="!isMobileSidebarOpen()">
+        [ngClass]="{ 'translate-x-0': isMobileSidebarOpen(), '-translate-x-full': !isMobileSidebarOpen() }">
 
         <div class="p-4 pt-16">
             <button class="absolute top-4 right-4 text-primary-600" (click)="onToggleMobileSidebar()">
@@ -42,3 +43,4 @@
         </div>
     </div>
 </div>
+}
