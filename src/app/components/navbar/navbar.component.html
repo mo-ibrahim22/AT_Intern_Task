@@ -12,8 +12,8 @@
         <!-- Desktop Navigation -->
         <div class="hidden lg:flex space-x-6">
             @for (item of navItems(); track item.path) {
-            <a [routerLink]="item.path" routerLinkActive="text-primary-200"
-                class="hover:text-primary-200 transition-colors">
+            <a [routerLink]="item.path" routerLinkActive="text-primary-900"
+                class="hover:text-primary-600 transition-colors">
                 {{ item.name }}
             </a>
             }
@@ -32,7 +32,7 @@
             <div class="flex items-center space-x-3">
                 <span class="hidden md:block text-sm">{{ user()?.name }}</span>
                 <button (click)="onLogout()"
-                    class="flex items-center space-x-1 hover:text-primary-200 transition-colors">
+                    class="flex items-center space-x-1 hover:text-primary-600 transition-colors">
                     <img src="assets/icons/logout.svg" alt="Logout" class="w-5 h-5" />
                     <span class="hidden md:block text-sm">Logout</span>
                 </button>
