@@ -1,0 +1,29 @@
+<div
+    class=" bg-primary-50 w-full max-w-48 mx-auto rounded-xl shadow-md hover:shadow-md transition-all duration-300 group cursor-pointer">
+
+
+    <div class=" aspect-[166/221] w-full">
+        <img [src]="product().imageCover" [alt]="product().title"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl" />
+    </div>
+
+    <div class="p-3 md:p-4">
+        <h3 class="font-semibold mb-2 line-clamp-1 text-sm md:text-base text-primary-900">
+            {{ product().title }}
+        </h3>
+
+        <p class="text-primary-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-1">
+            {{ product().category.name}}
+        </p>
+
+        <p class="text-base md:text-lg font-bold text-primary-600">
+            ${{ product().price }}
+        </p>
+
+        <div class="mt-3" (click)="$event.stopPropagation()">
+            <app-button [text]="'add to Cart'" [iconSrc]="'assets/icons/cart.svg'" iconPosition="left" size="sm"
+                variant="outline">
+            </app-button>
+        </div>
+    </div>
+</div>
