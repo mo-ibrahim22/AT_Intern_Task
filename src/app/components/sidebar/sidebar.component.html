@@ -4,10 +4,10 @@
         <div class="p-4">
             <div class="flex flex-col space-y-2">
                 @for (item of navItems(); track item.path) {
-                <app-button [routerLink]="item.path" routerLinkActive="!bg-primary-100 !text-primary-800"
-                    variant="ghost" [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name"
-                    [fullWidth]="true" [customClass]="'justify-start'">
-                </app-button>
+                <app-navigation-item-link [routerLink]="item.path" [text]="item.name"
+                    [iconSrc]="'assets/icons/' + item.icon + '.svg'" variant="sidebar" [fullWidth]="true"
+                    customClass="justify-start">
+                </app-navigation-item-link>
                 }
             </div>
         </div>
@@ -31,10 +31,11 @@
 
             <div class="flex flex-col space-y-2">
                 @for (item of navItems(); track item.path) {
-                <app-button [routerLink]="item.path" routerLinkActive="!bg-primary-200 !text-primary-800"
-                    variant="ghost" [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name"
-                    [fullWidth]="true" [customClass]="'justify-start'" (clicked)="onToggleMobileSidebar()">
-                </app-button>
+                <app-navigation-item-link [routerLink]="item.path" [text]="item.name"
+                    [iconSrc]="'assets/icons/' + item.icon + '.svg'" variant="sidebar" [fullWidth]="true"
+                    [customClass]="'justify-start'">
+                    (clicked)="onToggleMobileSidebar()">
+                </app-navigation-item-link>
                 }
             </div>
         </div>

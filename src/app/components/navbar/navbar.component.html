@@ -12,10 +12,8 @@
         <!-- Desktop Navigation -->
         <div class="hidden lg:flex space-x-6">
             @for (item of navItems(); track item.path) {
-            <a [routerLink]="item.path" routerLinkActive="text-primary-900"
-                class="hover:text-primary-600 transition-colors">
-                {{ item.name }}
-            </a>
+            <app-navigation-item-link [routerLink]="item.path" [text]="item.name" variant="navbar">
+            </app-navigation-item-link>
             }
         </div>
 

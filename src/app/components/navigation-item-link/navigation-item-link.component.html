@@ -1,0 +1,17 @@
+<a [routerLink]="routerLink()" routerLinkActive="!bg-primary-100 !text-primary-800 font-semibold"
+    [class]="linkClasses + ' nav-link'" (click)="onClick()">
+    <!-- Icon -->
+    @if (shouldShowIcon) {
+    <img [src]="iconSrc()" [alt]="text() || 'btn-icon'" class="btn-icon btn-icon-left" />
+    }
+
+    <!-- Text -->
+    @if (text()) {
+    <span>{{ text() }}</span>
+    }
+
+    <!-- Badge/Counter -->
+    @if (shouldShowBadge) {
+    <span class="btn-badge">{{ badge() }}</span>
+    }
+</a>
