@@ -168,14 +168,12 @@
 }
 
 @layer components {
-  /* Base Button Styles */
   .btn {
     @apply inline-flex items-center justify-center font-medium transition-all duration-200 
          border focus:outline-none focus:ring-2 focus:ring-offset-2 relative
          disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  /* Button Sizes */
   .btn-xs {
     @apply px-2 py-1 text-xs rounded-md;
   }
@@ -196,7 +194,6 @@
     @apply px-8 py-4 text-lg rounded-xl;
   }
 
-  /* Button Variants */
   .btn-primary {
     @apply bg-primary-600 text-white border-primary-600 
          hover:bg-primary-700 hover:border-primary-700 
@@ -248,67 +245,22 @@
          hover:text-primary-700 underline focus:ring-primary-500;
   }
 
-  /* Icon Only Buttons */
   .btn-icon-only {
-    @apply p-2;
+    @apply aspect-square p-2 rounded-full;
   }
 
-  .btn-icon-only.btn-xs {
-    @apply w-6 h-6 p-1;
-  }
-
-  .btn-icon-only.btn-sm {
-    @apply w-8 h-8 p-1.5;
-  }
-
-  .btn-icon-only.btn-md {
-    @apply w-10 h-10 p-2;
-  }
-
-  .btn-icon-only.btn-lg {
-    @apply w-12 h-12 p-2.5;
-  }
-
-  .btn-icon-only.btn-xl {
-    @apply w-14 h-14 p-3;
-  }
-
-  /* Full Width */
   .btn-full-width {
     @apply w-full;
   }
 
-  /* Loading State */
   .btn-loading {
     @apply cursor-wait;
   }
 
-  /* Icon Sizes */
   .btn-icon {
-    @apply flex-shrink-0;
+    @apply flex-shrink-0 w-5 h-5;
   }
 
-  .btn-xs .btn-icon {
-    @apply w-3 h-3;
-  }
-
-  .btn-sm .btn-icon {
-    @apply w-4 h-4;
-  }
-
-  .btn-md .btn-icon {
-    @apply w-5 h-5;
-  }
-
-  .btn-lg .btn-icon {
-    @apply w-6 h-6;
-  }
-
-  .btn-xl .btn-icon {
-    @apply w-7 h-7;
-  }
-
-  /* Icon Spacing */
   .btn-icon-left {
     @apply me-2;
   }
@@ -317,27 +269,19 @@
     @apply ms-2;
   }
 
-  .btn-icon-only .btn-icon {
-    @apply w-full h-full flex items-center justify-center;
-  }
-
-  /* Loading Spinner */
   .btn-loading-icon {
     @apply animate-spin;
   }
 
-  /* Badge */
   .btn-badge {
     @apply absolute -top-1 -right-1 bg-danger-500 text-white text-xs 
          font-semibold rounded-full px-1.5 py-0.5 min-w-7 text-center;
   }
 
-  /* Between Layout Specific */
   .btn-between-content {
     @apply flex items-center justify-between w-full;
   }
 
-  /* Hover and Focus States */
   .btn:not(.btn-disabled):not(.btn-loading):hover {
     @apply transform -translate-y-0.5 shadow-lg;
   }
@@ -346,7 +290,6 @@
     @apply transform translate-y-0;
   }
 
-  /* Disabled State */
   .btn-disabled {
     @apply opacity-50 cursor-not-allowed;
   }

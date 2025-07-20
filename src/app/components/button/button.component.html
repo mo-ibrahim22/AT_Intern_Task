@@ -16,6 +16,9 @@
         <span>{{ displayText() }}</span>
         <img [src]="secondaryIconSrc()" [alt]="'Right icon'" class="btn-icon" />
     </div>
+    } @else if (iconOnly() && shouldShowIcon()) {
+    <!-- Icon Only - Centered -->
+    <img [src]="iconSrc()" [alt]="text() || 'Icon'" class="btn-icon" />
     } @else {
     <!-- Standard Layouts (left, right, center) -->
 
