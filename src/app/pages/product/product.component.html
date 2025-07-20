@@ -1,0 +1,47 @@
+<div class="px-6 bg-primary-50">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-primary-900 mb-6">Shop</h1>
+
+        <div class="flex items-center space-x-2">
+            <select class="ps-3 py-2 bg-primary rounded-full text-sm font-medium">
+                <option>Sort by</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Newest</option>
+            </select>
+
+            <select class="ps-3 py-2 bg-primary rounded-full text-sm font-medium">
+                <option>Price</option>
+                <option>Under $50</option>
+                <option>$50 - $100</option>
+                <option>Over $100</option>
+            </select>
+
+            <select class="ps-3 py-2  bg-primary rounded-full text-sm font-medium">
+                <option>Size</option>
+                <option>XS</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    @if (isloading()) {
+    <p>Loading products...</p>
+    }
+    @else {
+    <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mb-16 gap-3 md:gap-4">
+        @for (product of products(); track product.id ;) {
+        <app-product-card [product]="product"></app-product-card>
+        }
+        @empty {
+        <p>No products found.</p>
+        }
+    </section>
+    }
+
+</div>
