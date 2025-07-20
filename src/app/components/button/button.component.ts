@@ -7,19 +7,11 @@ import {
   computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export type ButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'danger'
-  | 'warning'
-  | 'info'
-  | 'outline'
-  | 'ghost'
-  | 'link';
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type IconPosition = 'left' | 'right' | 'center' | 'between';
+import {
+  ButtonVariant,
+  ButtonSize,
+  IconPosition,
+} from '../../common/models/button.model';
 
 @Component({
   selector: 'app-button',
