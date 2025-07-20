@@ -1,0 +1,135 @@
+<div class="min-h-screen bg-primary-50">
+    @if (isLoading()) {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-primary-600">Loading product...</div>
+    </div>
+    } @else if (error()) {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-danger-600">{{ error() }}</div>
+    </div>
+    } @else if (product()) {
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Images Section -->
+            <div class="space-y-4">
+                <!-- Main Image -->
+                <div class="aspect-square bg-white rounded-xl overflow-hidden shadow-lg">
+                    <img [src]="currentImage" [alt]="product()?.title" class="w-full h-full object-cover" />
+                </div>
+
+                <!-- Thumbnail Images -->
+                @if (hasMultipleImages) {
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    @for (image of product()?.images; track $index) {
+                    <button
+                        class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200"
+                        [class.border-primary-600]="selectedImageIndex() === $index"
+                        [class.border-primary-200]="selectedImageIndex() !== $index" (click)="selectImage($index)">
+                        <img [src]="image" [alt]="product()?.title" class="w-full h-full object-cover" />
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Product Info -->
+            <div class="space-y-6">
+                <!-- Category & Brand -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {{ product()?.category?.name }}
+                    </span>
+                    <span class="bg-secondary-100 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {{ product()?.brand?.name }}
+                    </span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="text-3xl lg:text-4xl font-bold text-primary-900">
+                    {{ product()?.title }}
+                </h1>
+
+                <!-- Rating & Sales -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-1">
+                        <img src="assets/icons/star.svg" alt="Star" class="w-5 h-5 text-warning-400" />
+                        <span class="font-medium text-primary-900">{{ product()?.ratingsAverage }}</span>
+                        <span class="text-primary-600">({{ product()?.ratingsQuantity }} reviews)</span>
+                    </div>
+                    <div class="text-primary-600">
+                        {{ product()?.sold }} sold
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="text-4xl font-bold text-primary-900">
+                    ${{ product()?.price }}
+                </div>
+
+                <!-- Description -->
+                <div class="prose prose-primary max-w-none">
+                    <h3 class="text-lg font-semibold text-primary-900 mb-2">Description</h3>
+                    <p class="text-primary-700 leading-relaxed whitespace-pre-line">
+                        {{ product()?.description }}
+                    </p>
+                </div>
+
+                <!-- Subcategories -->
+                @if ((product()?.subcategory ?? []).length > 0) {
+                <div>
+                    <h3 class="text-lg font-semibold text-primary-900 mb-3">Categories</h3>
+                    <div class="flex flex-wrap gap-2">
+                        @for (sub of product()?.subcategory; track sub._id) {
+                        <span class="bg-tertiary-100 text-tertiary-500 px-3 py-1 rounded-full text-sm">
+                            {{ sub.name }}
+                        </span>
+                        }
+                    </div>
+                </div>
+                }
+
+                <!-- Stock Info -->
+                <div class="bg-primary-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-primary-700 font-medium">Stock Available:</span>
+                        <span class="text-primary-900 font-bold">{{ product()?.quantity }} units</span>
+                    </div>
+                </div>
+                <!-- Quantity Controls (if item is in cart) -->
+
+                <div class="bg-primary-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-primary-700 font-medium">In Cart:</span>
+                        <div class="flex items-center gap-3">
+                            <app-button iconSrc="assets/icons/minus.svg" iconPosition="center" [iconOnly]="true"
+                                size="sm" [variant]="'outline'">
+                            </app-button>
+
+                            <span class="font-bold text-lg w-8 text-center">{{1}}</span>
+
+                            <app-button iconSrc="assets/icons/plus.svg" iconPosition="center" [iconOnly]="true"
+                                size="sm" [variant]="'outline'">
+                            </app-button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Add to Cart Button -->
+                <div class="pt-4">
+                    <app-button [text]="'Add to Cart'" [iconSrc]="'assets/icons/cart.svg'" iconPosition="left" size="lg"
+                        [fullWidth]="true">
+                    </app-button>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    } @else {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-danger-600">Product not found</div>
+    </div>
+    }
+</div>
