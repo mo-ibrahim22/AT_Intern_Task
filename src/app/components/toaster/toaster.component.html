@@ -10,24 +10,24 @@
             <div class="flex items-center">
                 <!-- Success Icon -->
                 @if (toast.type === 'success') {
-                <img src="assets/icons/success.svg" alt="Success" class="w-5 h-5 mr-2" />
+                <img src="assets/icons/success.svg" alt="Success" class="w-5 h-5 me-2" />
                 }
                 <!-- Error Icon -->
                 @if (toast.type === 'error') {
-                <img src="assets/icons/error.svg" alt="Error" class="w-5 h-5 mr-2" />
+                <img src="assets/icons/error.svg" alt="Error" class="w-5 h-5 me-2" />
                 }
                 <!-- Warning Icon -->
                 @if (toast.type === 'warning') {
-                <img src="assets/icons/warning.svg" alt="Warning" class="w-5 h-5 mr-2" />
+                <img src="assets/icons/warning.svg" alt="Warning" class="w-5 h-5 me-2" />
                 }
                 <!-- Info Icon -->
                 @if (toast.type === 'info') {
-                <img src="assets/icons/info.svg" alt="Info" class="w-5 h-5 mr-2" />
+                <img src="assets/icons/info.svg" alt="Info" class="w-5 h-5 me-2" />
                 }
                 <p class="flex-1">{{ toast.message }}</p>
             </div>
             <app-button variant="ghost" iconSrc="assets/icons/close.svg" [iconOnly]="true" size="xs"
-                customClass="ml-2 text-white hover:text-white/80" (clicked)="onDismiss(toast.id)">
+                customClass="ms-2 text-white hover:text-white/80" (clicked)="onDismiss(toast.id)">
             </app-button>
         </div>
     </div>

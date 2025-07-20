@@ -17,7 +17,7 @@
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-primary-900 mb-4 flex items-center">
                         <app-button [text]="'1'" iconPosition="center" [shape]="'circle'"
-                            customClass="w-6 h-6 text-white text-sm font-bold bg-primary-600 mr-3">
+                            customClass="w-6 h-6 text-white text-sm font-bold bg-primary-600 me-3">
                         </app-button>
                         Basic Information
                     </h3>
@@ -42,7 +42,7 @@
                     @if (signupForm.hasError('passwordMismatch') && (signupForm.get('rePassword')?.touched ||
                     signupForm.get('password')?.touched)) {
                     <div class="mb-4 flex items-center">
-                        <img src="assets/icons/error.svg" alt="Error" class="h-4 w-4 text-red-500 mr-1" />
+                        <img src="assets/icons/error.svg" alt="Error" class="h-4 w-4 text-red-500 me-1" />
                         <span class="text-red-600 text-sm font-medium">
                             Passwords do not match
                         </span>
@@ -58,7 +58,7 @@
                 @if (errorMessage) {
                 <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                     <div class="flex items-center">
-                        <img src="assets/icons/error.svg" alt="Error" class="h-5 w-5 text-red-500 mr-2" />
+                        <img src="assets/icons/error.svg" alt="Error" class="h-5 w-5 text-red-500 me-2" />
                         <span class="text-red-700 font-medium">{{ errorMessage }}</span>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                 <p class="text-primary-600">
                     Already have an account?
                     <app-button variant="link" text="Sign in here" size="sm"
-                        customClass="text-primary-700 hover:text-primary-800 font-semibold ml-1"
+                        customClass="text-primary-700 hover:text-primary-800 font-semibold ms-1"
                         (clicked)="navigateToSignin()">
                     </app-button>
                 </p>
