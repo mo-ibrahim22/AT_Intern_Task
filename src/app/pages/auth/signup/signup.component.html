@@ -16,9 +16,10 @@
                 <!-- Basic Information -->
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-primary-900 mb-4 flex items-center">
-                        <app-button [text]="'1'" iconPosition="center" [shape]="'circle'"
-                            customClass="w-6 h-6 text-white text-sm font-bold bg-primary-600 me-3">
-                        </app-button>
+                        <span
+                            class="w-6 h-6 text-white text-sm font-bold bg-primary-600 rounded-full flex items-center justify-center me-3">
+                            1
+                        </span>
                         Basic Information
                     </h3>
 
@@ -65,8 +66,8 @@
                 }
 
                 <!-- Submit Button -->
-                <app-button type="submit" text="Create Account" size="lg"
-                    customClass="w-full bg-gradient-to-r from-secondary-500 to-secondary-600 text-white hover:from-secondary-600 hover:to-secondary-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                <app-button type="submit" text="Create Account" size="lg" variant="secondary" [fullWidth]="true"
+                    [customClass]="'bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 shadow-lg hover:shadow-xl font-semibold'"
                     [disabled]="formTouched && (signupForm.invalid || isSubmitting)" [loading]="isSubmitting">
                 </app-button>
             </form>
@@ -75,8 +76,7 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Already have an account?
-                    <app-button variant="link" text="Sign in here" size="sm"
-                        customClass="text-primary-700 hover:text-primary-800 font-semibold ms-1"
+                    <app-button variant="link" text="Sign in here" size="sm" [customClass]="'font-semibold ms-1'"
                         (clicked)="navigateToSignin()">
                     </app-button>
                 </p>

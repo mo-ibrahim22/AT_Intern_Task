@@ -25,9 +25,7 @@
         }
 
         <div class="flex justify-end space-x-3">
-            <app-button variant="outline" [text]="config()?.cancelText || 'Cancel'"
-                customClass="border-secondary-300 text-secondary-700 hover:bg-secondary-50"
-                (clicked)="onResponse(false)">
+            <app-button variant="outline" [text]="config()?.cancelText || 'Cancel'" (clicked)="onResponse(false)">
             </app-button>
 
             <app-button variant="danger" [text]="config()?.confirmText || 'Confirm'" (clicked)="onResponse(true)">

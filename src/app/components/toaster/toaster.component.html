@@ -27,7 +27,7 @@
                 <p class="flex-1">{{ toast.message }}</p>
             </div>
             <app-button variant="ghost" iconSrc="assets/icons/close.svg" [iconOnly]="true" size="xs"
-                customClass="ms-2 text-white hover:text-white/80" (clicked)="onDismiss(toast.id)">
+                [customClass]="'ms-2 text-white hover:text-white/80'" (clicked)="onDismiss(toast.id)">
             </app-button>
         </div>
     </div>

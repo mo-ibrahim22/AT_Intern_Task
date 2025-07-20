@@ -28,8 +28,7 @@
                             class="w-4 h-4 text-primary-600 bg-primary-50 border-primary-300 rounded focus:ring-primary-500 focus:ring-2">
                         <span class="ms-2 text-sm text-primary-700">Remember me</span>
                     </label>
-                    <app-button variant="link" text="Forgot password?" size="sm"
-                        customClass="text-primary-600 hover:text-primary-700 font-medium">
+                    <app-button variant="link" text="Forgot password?" size="sm">
                     </app-button>
                 </div>
 
@@ -44,8 +43,8 @@
                 }
 
                 <!-- Submit Button -->
-                <app-button type="submit" text="Sign In" size="lg"
-                    customClass="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
+                <app-button type="submit" text="Sign In" size="lg" [fullWidth]="true"
+                    [customClass]="'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl font-semibold'"
                     [disabled]="formTouched && (signinForm.invalid || isSubmitting)" [loading]="isSubmitting">
                 </app-button>
             </form>
@@ -64,11 +63,9 @@
 
             <!-- Social Login -->
             <div class="grid grid-cols-2 gap-3">
-                <app-button text="Google"
-                    customClass="w-full border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300 transition-all duration-200">
+                <app-button text="Google" variant="outline" [fullWidth]="true">
                 </app-button>
-                <app-button text="GitHub"
-                    customClass="w-full border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300 transition-all duration-200">
+                <app-button text="GitHub" variant="outline" [fullWidth]="true">
                 </app-button>
             </div>
 
@@ -76,8 +73,7 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Don't have an account?
-                    <app-button variant="link" text="Sign up for free" size="sm"
-                        customClass="text-primary-700 hover:text-primary-800 font-semibold ms-1"
+                    <app-button variant="link" text="Sign up for free" size="sm" [customClass]="'font-semibold ms-1'"
                         (clicked)="navigateToSignup()">
                     </app-button>
                 </p>

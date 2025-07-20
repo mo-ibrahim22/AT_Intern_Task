@@ -4,9 +4,9 @@
         <div class="p-4">
             <div class="flex flex-col space-y-2">
                 @for (item of navItems(); track item.path) {
-                <app-button [routerLink]="item.path" routerLinkActive="bg-primary-100 text-primary-800" variant="ghost"
-                    [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name" [fullWidth]="true"
-                    textAlign="left" customClass="text-primary-700 hover:bg-primary-100 justify-start">
+                <app-button [routerLink]="item.path" routerLinkActive="!bg-primary-100 !text-primary-800"
+                    variant="ghost" [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name"
+                    [fullWidth]="true" [customClass]="'justify-start'">
                 </app-button>
                 }
             </div>
@@ -26,16 +26,14 @@
 
         <div class="p-4 pt-16">
             <app-button variant="ghost" iconSrc="assets/icons/close.svg" [iconOnly]="true"
-                customClass="absolute top-4 right-4 text-primary-600 hover:bg-primary-100"
-                (clicked)="onToggleMobileSidebar()">
+                [customClass]="'absolute top-4 right-4'" (clicked)="onToggleMobileSidebar()">
             </app-button>
 
             <div class="flex flex-col space-y-2">
                 @for (item of navItems(); track item.path) {
-                <app-button [routerLink]="item.path" routerLinkActive="bg-primary-200 text-primary-800" variant="ghost"
-                    [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name" [fullWidth]="true"
-                    textAlign="left" customClass="text-primary-700 hover:bg-primary-200 justify-start"
-                    (clicked)="onToggleMobileSidebar()">
+                <app-button [routerLink]="item.path" routerLinkActive="!bg-primary-200 !text-primary-800"
+                    variant="ghost" [iconSrc]="'assets/icons/' + item.icon + '.svg'" [text]="item.name"
+                    [fullWidth]="true" [customClass]="'justify-start'" (clicked)="onToggleMobileSidebar()">
                 </app-button>
                 }
             </div>
