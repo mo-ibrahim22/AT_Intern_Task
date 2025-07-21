@@ -57,9 +57,8 @@ export class CartService {
   }
 
   private getHeaders(): HttpHeaders {
-    const token = this.authService.currentToken;
+    // Auth interceptor will handle the token automatically
     return new HttpHeaders({
-      token: `${token}`,
       'Content-Type': 'application/json',
     });
   }
@@ -70,13 +69,16 @@ export class CartService {
       this.loadingSignal.set(false);
       this.processingItemSignal.set(null);
 
+      // Use the processed error message from error interceptor
       const message =
-        error?.error?.message ||
-        error?.message ||
-        'An error occurred. Please try again.';
+        error?.userMessage || 'An error occurred. Please try again.';
 
       this.errorSignal.set(message);
-      this.toaster.show(message, 'error');
+      // Error interceptor already showed the toast, so we don't need to show it again
+      // unless it's a cart-specific message
+      if (operation.includes('cart')) {
+        this.toaster.show(message, 'error');
+      }
 
       setTimeout(() => this.errorSignal.set(null), 5000);
 

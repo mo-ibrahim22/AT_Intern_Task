@@ -15,6 +15,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { ToasterComponent } from '../../components/toaster/toaster.component';
 import { ConfirmationModalComponent } from '../../components/confirmation-modal/confirmation-modal.component';
+import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-layout',
@@ -25,6 +26,7 @@ import { ConfirmationModalComponent } from '../../components/confirmation-modal/
     SidebarComponent,
     ToasterComponent,
     ConfirmationModalComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',

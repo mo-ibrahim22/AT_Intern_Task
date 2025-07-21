@@ -22,7 +22,6 @@ export class ProductDetailsComponent implements OnInit {
 
   product = signal<Product | null>(null);
   isProcessing = signal(false);
-  isLoading = signal(false);
   selectedImageIndex = signal(0);
   error = signal<string | null>(null);
 
@@ -32,12 +31,10 @@ export class ProductDetailsComponent implements OnInit {
       this.loadProduct(productId);
     } else {
       this.error.set('No product ID provided');
-      this.isLoading.set(false);
     }
   }
 
   private loadProduct(id: string): void {
-    this.isLoading.set(true);
     this.error.set(null);
 
     this.productService.getProductById(id).subscribe({
@@ -48,11 +45,10 @@ export class ProductDetailsComponent implements OnInit {
         } else {
           this.error.set('Product data not found');
         }
-        this.isLoading.set(false);
       },
       error: () => {
-        this.error.set('Failed to load product. Please try again.');
-        this.isLoading.set(false);
+        // Error interceptor will handle the error display
+        this.error.set('Failed to load product');
       },
     });
   }

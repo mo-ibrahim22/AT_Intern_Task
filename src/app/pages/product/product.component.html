@@ -30,10 +30,6 @@
     </div>
 
     <!-- Products Grid -->
-    @if (isloading()) {
-    <p>Loading products...</p>
-    }
-    @else {
     <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mb-16 gap-3 md:gap-4">
         @for (product of products(); track product.id ;) {
         <app-product-card [product]="product"></app-product-card>
@@ -42,6 +38,5 @@
         <p>No products found.</p>
         }
     </section>
-    }
 
 </div>

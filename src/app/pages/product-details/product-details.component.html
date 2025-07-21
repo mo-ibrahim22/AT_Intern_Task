@@ -1,9 +1,5 @@
 <div class="min-h-screen bg-primary-50">
-    @if (isLoading()) {
-    <div class="flex justify-center items-center h-64">
-        <div class="text-lg text-primary-600">Loading product...</div>
-    </div>
-    } @else if (error()) {
+    @if (error()) {
     <div class="flex justify-center items-center h-64">
         <div class="text-lg text-danger-600">{{ error() }}</div>
     </div>

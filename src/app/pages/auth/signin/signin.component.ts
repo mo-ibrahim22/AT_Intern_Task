@@ -59,8 +59,11 @@ export class SigninComponent implements OnInit {
         },
         error: (error) => {
           console.error('Signin error:', error);
+          // Use the processed error message from error interceptor
           this.errorMessage =
-            error.error?.message || 'Signin failed. Please try again.';
+            error?.userMessage || 'Signin failed. Please try again.';
+          // Error interceptor already handles the toast for non-auth endpoints
+          // But for auth endpoints, we handle it manually
           this.toaster.show(this.errorMessage, 'error');
           this.isSubmitting = false;
         },

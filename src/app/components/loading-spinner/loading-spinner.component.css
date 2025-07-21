@@ -1,0 +1,4 @@
+/* Additional loading spinner styles if needed */
+.loading-overlay {
+  backdrop-filter: blur(2px);
+}

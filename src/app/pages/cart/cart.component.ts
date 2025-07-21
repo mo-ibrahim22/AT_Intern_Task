@@ -30,7 +30,9 @@ export class CartComponent implements OnInit {
   isCheckingOut = signal(false);
 
   ngOnInit(): void {
-    this.cartService.getCart().subscribe();
+    if (this.cartService.cart() === null) {
+      this.cartService.getCart().subscribe();
+    }
   }
 
   updateQuantity(productId: string, newCount: number): void {

@@ -61,6 +61,7 @@ export class AuthService {
         tap((response) => this.handleAuthSuccess(response)),
         catchError((error) => {
           this.isLoadingSignal.set(false);
+          // Let the error interceptor handle the error display
           return throwError(() => error);
         })
       );

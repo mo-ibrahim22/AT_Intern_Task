@@ -113,8 +113,9 @@ export class SignupComponent implements OnInit {
             },
             error: (error) => {
               console.error('signup error:', error);
+              // Use the processed error message from error interceptor
               this.errorMessage =
-                error.error?.message || 'signup failed. Please try again.';
+                error?.userMessage || 'signup failed. Please try again.';
               this.toaster.show(this.errorMessage, 'error');
               this.isSubmitting = false;
             },

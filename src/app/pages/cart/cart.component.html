@@ -12,13 +12,7 @@
             }
         </div>
 
-        @if (isLoading()) {
-        <!-- Loading State -->
-        <div class="flex flex-col items-center justify-center py-16">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
-            <p class="text-primary-600 text-lg">Loading your cart...</p>
-        </div>
-        } @else if (isEmpty()) {
+        @if (isEmpty() && !isLoading()) {
         <!-- Empty Cart State -->
         <div class="max-w-md mx-auto text-center">
             <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-8">
@@ -36,7 +30,7 @@
                 </app-button>
             </div>
         </div>
-        } @else {
+        } @else if (hasItems() && !isLoading()) {
         <!-- Cart Content -->
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
