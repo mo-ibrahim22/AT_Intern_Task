@@ -7,7 +7,7 @@
         <input [type]="type()" [id]="controlName()" [formControlName]="controlName()" [placeholder]="placeholder()"
             class="w-full px-4 py-3 border-2 rounded-xl bg-primary-50 text-primary-900 placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all duration-200"
             [ngClass]="{
-        'border-red-400 bg-red-50 focus:ring-red-500': hasError(),
+        'border-danger-400 bg-danger-50 focus:ring-danger-500': hasError(),
         'border-primary-300 hover:border-primary-400': !hasError()
       }" />
 
@@ -21,7 +21,7 @@
     @if (hasError()) {
     <div class="mt-2 flex items-center">
         <img src="assets/icons/error.svg" alt="error icon" class="h-4 w-4 me-1" />
-        <span class="text-red-600 text-sm font-medium">
+        <span class="text-danger-600 text-sm font-medium">
             {{ getErrorMessage() }}
         </span>
     </div>

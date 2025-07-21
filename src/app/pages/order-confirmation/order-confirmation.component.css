@@ -1,0 +1,39 @@
+/* Success animations */
+@keyframes successSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-card {
+  animation: successSlideIn 0.5s ease-out;
+}
+
+/* Pulse animation for success icon */
+@keyframes successPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.success-icon {
+  animation: successPulse 2s infinite;
+}
+
+/* Status indicator animations */
+.status-indicator {
+  transition: all 0.3s ease;
+}
+
+.status-indicator.active {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}

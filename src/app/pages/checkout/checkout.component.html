@@ -1,0 +1,171 @@
+<div class="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <div
+                class="mx-auto w-16 h-16 bg-gradient-to-br from-success-600 to-success-700 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                <img src="assets/icons/success.svg" alt="Checkout" class="w-8 h-8 text-white" />
+            </div>
+            <h1 class="text-4xl font-bold text-primary-900 mb-2">Checkout</h1>
+            <p class="text-primary-600">Complete your order</p>
+        </div>
+
+        @if (cart()) {
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Shipping Information Form -->
+                <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-6">
+                    <h2 class="text-2xl font-bold text-primary-900 mb-6 flex items-center">
+                        <img src="assets/icons/package.svg" alt="Shipping" class="w-6 h-6 me-3" />
+                        Shipping Information
+                    </h2>
+
+                    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+                        <app-input-field [formGroup]="checkoutForm" controlName="details" label="Address Details"
+                            type="text" placeholder="Enter your full address details">
+                        </app-input-field>
+
+                        <app-input-field [formGroup]="checkoutForm" controlName="phone" label="Phone Number" type="tel"
+                            placeholder="Enter your phone number (11 digits)">
+                        </app-input-field>
+
+                        <app-input-field [formGroup]="checkoutForm" controlName="city" label="City" type="text"
+                            placeholder="Enter your city">
+                        </app-input-field>
+
+                        <!-- Error Message -->
+                        @if (errorMessage()) {
+                        <div class="mb-6 p-4 bg-danger-50 border border-danger-200 rounded-xl">
+                            <div class="flex items-center">
+                                <img src="assets/icons/error.svg" alt="Error" class="h-5 w-5 text-danger-500 me-2" />
+                                <span class="text-danger-700 font-medium">{{ errorMessage() }}</span>
+                            </div>
+                        </div>
+                        }
+
+                        <!-- Action Buttons -->
+                        <div class="space-y-3">
+                            <app-button type="submit" text="Place Order" iconSrc="assets/icons/success.svg"
+                                iconPosition="left" size="lg" variant="success" [fullWidth]="true"
+                                [loading]="isSubmitting()"
+                                [disabled]="formTouched() && (checkoutForm.invalid || isSubmitting())">
+                            </app-button>
+
+                            <app-button text="Back to Cart" iconSrc="assets/icons/cart.svg" iconPosition="left"
+                                variant="outline" [fullWidth]="true" [disabled]="isSubmitting()"
+                                (clicked)="goBackToCart()">
+                            </app-button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-6">
+                    <h2 class="text-2xl font-bold text-primary-900 mb-6 flex items-center">
+                        <img src="assets/icons/money.svg" alt="Summary" class="w-6 h-6 me-3" />
+                        Order Summary
+                    </h2>
+
+                    <!-- Cart Items -->
+                    <div class="space-y-4 mb-6">
+                        <h3 class="text-lg font-semibold text-primary-900">Items ({{ getItemCount() }})</h3>
+                        @for (item of cart()?.data?.products; track item._id) {
+                        <div class="flex items-center gap-4 p-3 bg-primary-50 rounded-lg">
+                            <img [src]="item.product.imageCover" [alt]="item.product.title"
+                                class="w-16 h-16 object-cover rounded-lg border border-primary-200" />
+
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-medium text-primary-900 line-clamp-1">
+                                    {{ item.product.title }}
+                                </h4>
+                                <p class="text-sm text-primary-600">
+                                    Qty: {{ item.count }} × ${{ item.price }}
+                                </p>
+                            </div>
+
+                            <div class="text-right">
+                                <div class="font-bold text-primary-900">
+                                    ${{ item.price * item.count }}
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="space-y-3 mb-6 border-t border-primary-200 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-700">Subtotal</span>
+                            <span class="font-semibold text-primary-900">${{ getSubtotal() }}</span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-700 flex items-center">
+                                Shipping
+                                @if (getShipping() === 0) {
+                                <span
+                                    class="ms-2 text-xs bg-success-100 text-success-700 px-2 py-1 rounded-full">FREE</span>
+                                }
+                            </span>
+                            <span class="font-semibold text-primary-900">
+                                @if (getShipping() === 0) {
+                                <span class="text-success-600">Free</span>
+                                } @else {
+                                ${{ getShipping() }}
+                                }
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-primary-700">Tax (8%)</span>
+                            <span class="font-semibold text-primary-900">${{ getTax() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="border-t border-primary-200 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-primary-900">Total</span>
+                            <span class="text-2xl font-bold text-primary-900">${{ getFinalTotal() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="mt-6 p-4 bg-info-50 border border-info-200 rounded-lg">
+                        <div class="flex items-center">
+                            <img src="assets/icons/money.svg" alt="Payment" class="w-5 h-5 text-info-600 me-2" />
+                            <div>
+                                <p class="font-medium text-info-900">Cash on Delivery</p>
+                                <p class="text-sm text-info-700">Pay when your order arrives</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Badge -->
+                    <div class="mt-6 pt-4 border-t border-primary-200">
+                        <div class="flex items-center justify-center text-sm text-primary-600">
+                            <img src="assets/icons/success.svg" alt="Secure" class="w-4 h-4 me-2" />
+                            Secure checkout guaranteed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div class="max-w-md mx-auto text-center">
+            <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-8">
+                <div class="mx-auto w-20 h-20 bg-warning-100 rounded-full flex items-center justify-center mb-6">
+                    <img src="assets/icons/warning.svg" alt="Warning" class="w-10 h-10 text-warning-600" />
+                </div>
+                <h2 class="text-2xl font-bold text-primary-900 mb-4">Unable to Load Checkout</h2>
+                <p class="text-primary-600 mb-6">
+                    There was an issue loading your cart information. Please try again.
+                </p>
+                <app-button text="Go to Cart" iconSrc="assets/icons/cart.svg" iconPosition="left" size="lg"
+                    [fullWidth]="true" routerLink="/cart">
+                </app-button>
+            </div>
+        </div>
+        }
+    </div>
+</div>

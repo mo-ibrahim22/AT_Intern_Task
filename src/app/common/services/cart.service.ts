@@ -235,7 +235,7 @@ export class CartService {
     });
   }
 
-  private clearCartDirect(): Observable<ClearCartResponse> {
+  clearCartDirect(): Observable<ClearCartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 

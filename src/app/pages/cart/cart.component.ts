@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../common/services/cart.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ButtonComponent } from '../../components/button/button.component';
 
 @Component({
@@ -13,6 +13,7 @@ import { ButtonComponent } from '../../components/button/button.component';
 })
 export class CartComponent implements OnInit {
   private readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
 
   cartItems = this.cartService.cart;
   isLoading = this.cartService.isLoading;
@@ -60,17 +61,10 @@ export class CartComponent implements OnInit {
   }
 
   proceedToCheckout(): void {
-    this.isCheckingOut.set(true);
-
-    // Simulate checkout process
-    setTimeout(() => {
-      this.isCheckingOut.set(false);
-      // Here you would typically navigate to checkout or payment page
-      console.log('Proceeding to checkout with total:', this.finalTotal());
-    }, 2000);
+    this.router.navigate(['/checkout']);
   }
 
   continueShopping(): void {
-    // Navigate to products page
+    this.router.navigate(['/products']);
   }
 }

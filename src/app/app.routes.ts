@@ -45,6 +45,26 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./pages/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent
+      ),
+    canActivate: [authGuard],
+    resolve: {
+      cart: () =>
+        import('./common/resolvers/cart.resolver').then((m) => m.cartResolver),
+    },
+  },
+  {
+    path: 'order-confirmation',
+    loadComponent: () =>
+      import('./pages/order-confirmation/order-confirmation.component').then(
+        (m) => m.OrderConfirmationComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: '**',
     redirectTo: '/home',
   },

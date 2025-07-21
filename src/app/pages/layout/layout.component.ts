@@ -47,9 +47,9 @@ export class LayoutComponent {
   navItems = signal<NavItem[]>([
     { name: 'Home', path: '/home', icon: 'home' },
     { name: 'Products', path: '/products', icon: 'shopping-bag' },
+    { name: 'Cart', path: '/cart', icon: 'cart' },
     { name: 'Orders', path: '/orders', icon: 'package' },
     { name: 'Account', path: '/account', icon: 'user' },
-    { name: 'Cart', path: '/cart', icon: 'cart' },
   ]);
 
   toggleMobileSidebar(): void {

@@ -43,8 +43,8 @@
                     @if (signupForm.hasError('passwordMismatch') && (signupForm.get('rePassword')?.touched ||
                     signupForm.get('password')?.touched)) {
                     <div class="mb-4 flex items-center">
-                        <img src="assets/icons/error.svg" alt="Error" class="h-4 w-4 text-red-500 me-1" />
-                        <span class="text-red-600 text-sm font-medium">
+                        <img src="assets/icons/error.svg" alt="Error" class="h-4 w-4 text-danger-500 me-1" />
+                        <span class="text-danger-600 text-sm font-medium">
                             Passwords do not match
                         </span>
                     </div>
@@ -57,10 +57,10 @@
 
                 <!-- Error Message -->
                 @if (errorMessage) {
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div class="mb-6 p-4 bg-danger-50 border border-danger-200 rounded-xl">
                     <div class="flex items-center">
-                        <img src="assets/icons/error.svg" alt="Error" class="h-5 w-5 text-red-500 me-2" />
-                        <span class="text-red-700 font-medium">{{ errorMessage }}</span>
+                        <img src="assets/icons/error.svg" alt="Error" class="h-5 w-5 text-danger-500 me-2" />
+                        <span class="text-danger-700 font-medium">{{ errorMessage }}</span>
                     </div>
                 </div>
                 }
