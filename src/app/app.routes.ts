@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './common/guards/auth.guard';
+import { productDetailsResolver } from './common/resolvers/product-details.resolver';
+import { checkoutResolver } from './common/resolvers/checkout.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -37,6 +39,10 @@ export const routes: Routes = [
       import('./pages/product-details/product-details.component').then(
         (m) => m.ProductDetailsComponent
       ),
+    resolve: {
+      product: productDetailsResolver,
+    },
+    canActivate: [authGuard],
   },
   {
     path: 'cart',
@@ -51,6 +57,9 @@ export const routes: Routes = [
         (m) => m.CheckoutComponent
       ),
     canActivate: [authGuard],
+    resolve: {
+      cart: checkoutResolver,
+    },
   },
   {
     path: 'order-confirmation',

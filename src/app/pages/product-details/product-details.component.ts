@@ -23,34 +23,16 @@ export class ProductDetailsComponent implements OnInit {
   product = signal<Product | null>(null);
   isProcessing = signal(false);
   selectedImageIndex = signal(0);
-  error = signal<string | null>(null);
 
   ngOnInit(): void {
-    const productId = this.route.snapshot.paramMap.get('id');
-    if (productId) {
-      this.loadProduct(productId);
-    } else {
-      this.error.set('No product ID provided');
+    // Get product data from resolver
+    const productData = this.route.snapshot.data['product'] as Product;
+
+    if (productData) {
+      this.product.set(productData);
+      this.selectedImageIndex.set(0);
     }
-  }
-
-  private loadProduct(id: string): void {
-    this.error.set(null);
-
-    this.productService.getProductById(id).subscribe({
-      next: (response) => {
-        if (response?.data) {
-          this.product.set(response.data);
-          this.selectedImageIndex.set(0);
-        } else {
-          this.error.set('Product data not found');
-        }
-      },
-      error: () => {
-        // Error interceptor will handle the error display
-        this.error.set('Failed to load product');
-      },
-    });
+    // If no product data, resolver already handled the redirect
   }
 
   selectImage(index: number): void {

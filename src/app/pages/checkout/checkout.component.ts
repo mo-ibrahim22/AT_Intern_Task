@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormGroup,
   FormBuilder,
@@ -28,6 +28,7 @@ import { CreateOrderRequest } from '../../common/models/order.model';
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit {
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private orderService = inject(OrderService);
@@ -39,40 +40,16 @@ export class CheckoutComponent implements OnInit {
   isSubmitting = signal(false);
   formTouched = signal(false);
   errorMessage = signal('');
-  isLoadingCart = signal(true);
 
   ngOnInit(): void {
-    this.loadCartAndInitialize();
-  }
+    // Get cart data from resolver
+    const cartData = this.route.snapshot.data['cart'] as CartResponse | null;
 
-  private loadCartAndInitialize(): void {
-    this.isLoadingCart.set(true);
-
-    this.cartService.getCart().subscribe({
-      next: (cartData) => {
-        console.log('Checkout component - received cart data:', cartData);
-
-        // Check if cart has items
-        if (!cartData || !cartData.data?.products?.length) {
-          this.toaster.show(
-            'Your cart is empty. Add items before checkout.',
-            'warning'
-          );
-          this.router.navigate(['/products']);
-          return;
-        }
-
-        this.cart.set(cartData);
-        this.initializeForm();
-        this.isLoadingCart.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to load cart for checkout:', error);
-        this.toaster.show('Failed to load cart. Please try again.', 'error');
-        this.router.navigate(['/cart']);
-        this.isLoadingCart.set(false);
-      },
-    });
+    if (cartData) {
+      this.cart.set(cartData);
+      this.initializeForm();
+    }
+    // If no cart data, resolver already handled the redirect
   }
 
   private initializeForm(): void {
@@ -99,12 +76,9 @@ export class CheckoutComponent implements OnInit {
   }
 
   private processOrder(): void {
-    const currentCart = this.cart();
-    console.log('Processing order with cart:', currentCart);
-
-    if (!currentCart?.cartId) {
+    console.log('Processing order with cart:', this.cart());
+    if (!this.cart()?.cartId) {
       this.toaster.show('Cart information is missing', 'error');
-      console.error('Cart ID is missing. Cart data:', currentCart);
       return;
     }
 
@@ -114,29 +88,17 @@ export class CheckoutComponent implements OnInit {
       shippingAddress: this.checkoutForm.value,
     };
 
-    console.log(
-      'Creating order with cartId:',
-      currentCart.cartId,
-      'and request:',
-      orderRequest
-    );
-
-    this.orderService.createOrder(currentCart.cartId, orderRequest).subscribe({
+    this.orderService.createOrder(this.cart()!.cartId, orderRequest).subscribe({
       next: (response) => {
         console.log('Order created successfully:', response);
         this.toaster.show('Order placed successfully!', 'success');
 
-        this.cartService.clearCartDirect().subscribe({
-          next: () => {
-            console.log('Cart cleared, navigating to order confirmation');
-            this.orderService.setOrder(response.data); 
-            this.router.navigate(['/order-confirmation']);
-          },
-          error: (clearError) => {
-            console.warn('Failed to clear cart, still proceeding:', clearError);
-            this.orderService.setOrder(response.data); 
-            this.router.navigate(['/order-confirmation']);
-          },
+        // Clear the cart after successful order
+        this.cartService.clearCartDirect();
+
+        // Navigate to order confirmation or orders page
+        this.router.navigate(['/order-confirmation'], {
+          state: { order: response.data },
         });
       },
       error: (error) => {

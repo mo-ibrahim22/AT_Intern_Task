@@ -3,10 +3,10 @@ import { ResolveFn, Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
 import { ToasterService } from '../services/toaster.service';
-import { catchError, of, map } from 'rxjs';
+import { catchError, of, map, switchMap } from 'rxjs';
 import { CartResponse } from '../models/cart.model';
 
-export const cartResolver: ResolveFn<CartResponse | null> = (route, state) => {
+export const checkoutResolver: ResolveFn<CartResponse | null> = () => {
   const cartService = inject(CartService);
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -19,12 +19,16 @@ export const cartResolver: ResolveFn<CartResponse | null> = (route, state) => {
     return of(null);
   }
 
-  // Get cart data
+  // Check if cart is already loaded
+  const currentCart = cartService.cart();
+  if (currentCart && currentCart.data?.products?.length) {
+    return of(currentCart);
+  }
+
+  // Fetch fresh cart data
   return cartService.getCart().pipe(
     map((cart) => {
-      console.log('Cart resolver - received cart:', cart);
-
-      // Check if cart has items
+      // Validate cart has items
       if (!cart || !cart.data?.products?.length) {
         toaster.show(
           'Your cart is empty. Add items before checkout.',
@@ -33,6 +37,14 @@ export const cartResolver: ResolveFn<CartResponse | null> = (route, state) => {
         router.navigate(['/products']);
         return null;
       }
+
+      // Validate cart has required data
+      if (!cart.cartId) {
+        toaster.show('Cart information is incomplete', 'error');
+        router.navigate(['/cart']);
+        return null;
+      }
+
       return cart;
     }),
     catchError((error) => {
