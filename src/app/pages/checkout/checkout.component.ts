@@ -76,7 +76,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   private processOrder(): void {
-    console.log('Processing order with cart:', this.cart());
     if (!this.cart()?.cartId) {
       this.toaster.show('Cart information is missing', 'error');
       return;
@@ -90,16 +89,19 @@ export class CheckoutComponent implements OnInit {
 
     this.orderService.createOrder(this.cart()!.cartId, orderRequest).subscribe({
       next: (response) => {
-        console.log('Order created successfully:', response);
         this.toaster.show('Order placed successfully!', 'success');
 
-        // Clear the cart after successful order
-        this.cartService.clearCartDirect();
-
-        // Navigate to order confirmation or orders page
-        this.router.navigate(['/order-confirmation'], {
-          state: { order: response.data },
-        });
+        // Navigate to order confirmation with order data
+        this.router
+          .navigate(['/order-confirmation'], {
+            state: { order: response.data },
+          })
+          .then(() => {
+            // Clear the cart after successful navigation
+            this.cartService.clearCartDirect().subscribe({
+              error: (err) => console.warn('Could not clear cart:', err),
+            });
+          });
       },
       error: (error) => {
         console.error('Order creation failed:', error);

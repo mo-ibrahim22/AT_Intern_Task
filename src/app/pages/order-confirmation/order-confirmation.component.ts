@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../components/button/button.component';
 import { Order } from '../../common/models/order.model';
-import { OrderService } from '../../common/services/order.service';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -14,17 +13,24 @@ import { OrderService } from '../../common/services/order.service';
 })
 export class OrderConfirmationComponent implements OnInit {
   private router = inject(Router);
-  private orderService = inject(OrderService);
 
   order = signal<Order | null>(null);
 
   ngOnInit(): void {
-    const orderData = this.orderService.getOrder();
+    // Get order data from navigation state
+    const navigation = this.router.getCurrentNavigation();
+    let orderData = navigation?.extras?.state?.['order'] as Order;
+
+    // If no navigation state, try to get from history state
+    if (!orderData && typeof window !== 'undefined') {
+      orderData = window.history.state?.order as Order;
+    }
 
     if (orderData) {
       this.order.set(orderData);
-      this.orderService.setOrder(null); // Clear stored order
     } else {
+      console.warn('No order data found, redirecting to home');
+      // If no order data, redirect to home
       this.router.navigate(['/home']);
     }
   }
@@ -45,23 +51,5 @@ export class OrderConfirmationComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit',
     });
-  }
-
-  getSubtotal(): number {
-    const order = this.order();
-    if (!order?.cartItems) return 0;
-
-    return order.cartItems.reduce((total, item) => {
-      return total + item.price * item.count;
-    }, 0);
-  }
-
-  getOrderStatus(): string {
-    const order = this.order();
-    if (!order) return 'Unknown';
-
-    if (order.isDelivered) return 'Delivered';
-    if (order.isPaid) return 'Paid & Processing';
-    return 'Pending Payment';
   }
 }

@@ -87,7 +87,6 @@ export class CartService {
 
     return this.http.get<CartResponse>(`${this.apiUrl}/api/v1/cart`).pipe(
       tap((cart) => {
-        console.log('CartService - received cart response:', cart);
         this.cartSignal.set(cart);
         this.loadingSignal.set(false);
       }),

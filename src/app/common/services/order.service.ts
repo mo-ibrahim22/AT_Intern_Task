@@ -1,15 +1,12 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environment/environment';
-import {
-  Order,
-  OrderResponse,
-  CreateOrderRequest,
-} from '../models/order.model';
+import { OrderResponse, CreateOrderRequest } from '../models/order.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -22,16 +19,6 @@ export class OrderService {
 
   private apiUrl = environment.apiUrl;
 
-  private currentOrder = signal<Order | null>(null);
-
-  setOrder(order: Order | null) {
-    this.currentOrder.set(order);
-  }
-
-  getOrder(): Order | null {
-    return this.currentOrder();
-  }
-
   private requireAuth(): boolean {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/signin']);
@@ -39,12 +26,6 @@ export class OrderService {
       return false;
     }
     return true;
-  }
-
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
   }
 
   createOrder(
@@ -55,21 +36,16 @@ export class OrderService {
       return throwError(() => new Error('Authentication required'));
     }
 
-    return this.http.post<OrderResponse>(
-      `${this.apiUrl}/api/v1/orders/${cartId}`,
-      orderData,
-      { headers: this.getHeaders() }
-    );
-  }
-
-  getUserOrders(): Observable<{ status: string; data: any[] }> {
-    if (!this.requireAuth()) {
-      return throwError(() => new Error('Authentication required'));
-    }
-
-    return this.http.get<{ status: string; data: any[] }>(
-      `${this.apiUrl}/api/v1/orders/user/${this.authService.user()?.name}`,
-      { headers: this.getHeaders() }
-    );
+    return this.http
+      .post<OrderResponse>(`${this.apiUrl}/api/v1/orders/${cartId}`, orderData)
+      .pipe(
+        tap((response) => {
+          this.toaster.show('Order created successfully!', 'success');
+        }),
+        catchError((error) => {
+          console.error('Order creation error:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }

@@ -53,7 +53,6 @@ export class SigninComponent implements OnInit {
 
       this.authService.signin(signinData).subscribe({
         next: (response) => {
-          console.log('Signin successful:', response);
           this.toaster.show(`Welcome back, ${response.user.name}!`, 'success');
           this.router.navigate(['/home']);
         },

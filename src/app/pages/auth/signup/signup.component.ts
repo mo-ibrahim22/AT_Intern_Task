@@ -104,7 +104,6 @@ export class SignupComponent implements OnInit {
 
           this.authService.signup(signupData).subscribe({
             next: (response) => {
-              console.log('signup successful:', response);
               this.toaster.show(
                 'Account created successfully! Please sign in.',
                 'success'
