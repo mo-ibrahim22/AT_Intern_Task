@@ -22,7 +22,6 @@ export class OrderService {
 
   private apiUrl = environment.apiUrl;
 
-  // ✅ Signal to temporarily store order
   private currentOrder = signal<Order | null>(null);
 
   setOrder(order: Order | null) {

@@ -45,11 +45,11 @@ export class CartComponent implements OnInit {
   }
 
   removeItem(productId: string): void {
-    this.cartService.removeItemWithConfirmation(productId).subscribe();
+    this.cartService.removeItem(productId).subscribe();
   }
 
   clearCart(): void {
-    this.cartService.clearCartWithConfirmation().subscribe();
+    this.cartService.clearCart().subscribe();
   }
 
   isProcessingItem(productId: string): boolean {

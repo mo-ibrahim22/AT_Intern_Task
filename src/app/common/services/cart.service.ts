@@ -56,13 +56,6 @@ export class CartService {
     return true;
   }
 
-  private getHeaders(): HttpHeaders {
-    // Auth interceptor will handle the token automatically
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
-  }
-
   private handleError(operation: string) {
     return (error: any) => {
       console.error(`${operation} failed:`, error);
@@ -92,18 +85,14 @@ export class CartService {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http
-      .get<CartResponse>(`${this.apiUrl}/api/v1/cart`, {
-        headers: this.getHeaders(),
-      })
-      .pipe(
-        tap((cart) => {
-          console.log('CartService - received cart response:', cart);
-          this.cartSignal.set(cart);
-          this.loadingSignal.set(false);
-        }),
-        catchError(this.handleError('Get cart'))
-      );
+    return this.http.get<CartResponse>(`${this.apiUrl}/api/v1/cart`).pipe(
+      tap((cart) => {
+        console.log('CartService - received cart response:', cart);
+        this.cartSignal.set(cart);
+        this.loadingSignal.set(false);
+      }),
+      catchError(this.handleError('Get cart'))
+    );
   }
 
   addToCart(productId: string): Observable<CartResponse> {
@@ -115,14 +104,10 @@ export class CartService {
     const body: AddToCartRequest = { productId };
 
     return this.http
-      .post<CartResponse>(`${this.apiUrl}/api/v1/cart`, body, {
-        headers: this.getHeaders(),
-      })
+      .post<CartResponse>(`${this.apiUrl}/api/v1/cart`, body)
       .pipe(
         switchMap(() =>
-          this.http.get<CartResponse>(`${this.apiUrl}/api/v1/cart`, {
-            headers: this.getHeaders(),
-          })
+          this.http.get<CartResponse>(`${this.apiUrl}/api/v1/cart`)
         ),
         tap((cart) => {
           this.cartSignal.set(cart);
@@ -137,7 +122,7 @@ export class CartService {
     if (!this.requireAuth()) return EMPTY;
 
     if (count <= 0) {
-      return this.removeItemWithConfirmation(productId);
+      return this.removeItem(productId);
     }
 
     this.processingItemSignal.set(productId);
@@ -146,9 +131,7 @@ export class CartService {
     const body: UpdateCartRequest = { count: count.toString() };
 
     return this.http
-      .put<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`, body, {
-        headers: this.getHeaders(),
-      })
+      .put<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`, body)
       .pipe(
         tap((cart) => {
           this.cartSignal.set(cart);
@@ -164,9 +147,7 @@ export class CartService {
     this.errorSignal.set(null);
 
     return this.http
-      .delete<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`, {
-        headers: this.getHeaders(),
-      })
+      .delete<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`)
       .pipe(
         tap((cart) => {
           this.cartSignal.set(cart);
@@ -177,7 +158,7 @@ export class CartService {
       );
   }
 
-  removeItemWithConfirmation(productId: string): Observable<CartResponse> {
+  removeItem(productId: string): Observable<CartResponse> {
     if (!this.requireAuth()) return EMPTY;
 
     const product = this.getProductFromCart(productId);
@@ -207,7 +188,7 @@ export class CartService {
     });
   }
 
-  clearCartWithConfirmation(): Observable<ClearCartResponse> {
+  clearCart(): Observable<ClearCartResponse> {
     if (!this.requireAuth()) return EMPTY;
 
     const itemCount = this.cartCount();
@@ -241,9 +222,7 @@ export class CartService {
     this.errorSignal.set(null);
 
     return this.http
-      .delete<ClearCartResponse>(`${this.apiUrl}/api/v1/cart`, {
-        headers: this.getHeaders(),
-      })
+      .delete<ClearCartResponse>(`${this.apiUrl}/api/v1/cart`)
       .pipe(
         tap(() => {
           this.cartSignal.set(null);

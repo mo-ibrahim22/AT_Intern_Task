@@ -99,7 +99,7 @@ export class ProductDetailsComponent implements OnInit {
 
     if (this.isInCart) {
       this.isProcessing.set(true);
-      this.cartService.removeItemWithConfirmation(id).subscribe({
+      this.cartService.removeItem(id).subscribe({
         complete: () => this.isProcessing.set(false),
         error: () => this.isProcessing.set(false),
       });

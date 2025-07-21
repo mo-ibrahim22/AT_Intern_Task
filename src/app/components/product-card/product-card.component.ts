@@ -45,7 +45,7 @@ export class ProductCardComponent {
 
     if (this.isInCart) {
       this.isProcessing.set(true);
-      this.cartService.removeItemWithConfirmation(this.product().id).subscribe({
+      this.cartService.removeItem(this.product().id).subscribe({
         complete: () => this.isProcessing.set(false),
         error: () => this.isProcessing.set(false),
       });
