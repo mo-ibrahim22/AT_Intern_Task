@@ -1,9 +1,11 @@
-import { Component, OnInit, inject, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../common/services/product.service';
 import { Product } from '../../common/models/product.model';
 import { ButtonComponent } from '../../components/button/button.component';
+import { CartService } from '../../common/services/cart.service';
+import { ConfirmationService } from '../../common/services/confirmation.service';
 
 @Component({
   selector: 'app-product-details',
@@ -14,14 +16,15 @@ import { ButtonComponent } from '../../components/button/button.component';
 })
 export class ProductDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly ProductService = inject(ProductService);
+  private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
+  private readonly confirmation = inject(ConfirmationService);
 
   product = signal<Product | null>(null);
-  isLoading = signal(true);
+  isProcessing = signal(false);
+  isLoading = signal(false);
   selectedImageIndex = signal(0);
   error = signal<string | null>(null);
-
-  constructor() {}
 
   ngOnInit(): void {
     const productId = this.route.snapshot.paramMap.get('id');
@@ -37,18 +40,17 @@ export class ProductDetailsComponent implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.ProductService.getProductById(id).subscribe({
+    this.productService.getProductById(id).subscribe({
       next: (response) => {
-        if (response && response.data) {
+        if (response?.data) {
           this.product.set(response.data);
-          this.selectedImageIndex.set(0); // Reset image selection
+          this.selectedImageIndex.set(0);
         } else {
           this.error.set('Product data not found');
         }
         this.isLoading.set(false);
       },
-      error: (err) => {
-        console.error('Error loading product:', err);
+      error: () => {
         this.error.set('Failed to load product. Please try again.');
         this.isLoading.set(false);
       },
@@ -56,26 +58,94 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   selectImage(index: number): void {
-    const currentProduct = this.product();
-    if (currentProduct && index >= 0 && index < currentProduct.images.length) {
-      this.selectedImageIndex.set(index);
-    }
+    if (!this.product()) return;
+    this.selectedImageIndex.set(index);
   }
 
   get currentImage(): string {
-    const currentProduct = this.product();
-    if (!currentProduct) return '';
-
-    if (currentProduct.images && currentProduct.images.length > 0) {
-      const index = this.selectedImageIndex();
-      return currentProduct.images[index] || currentProduct.imageCover;
-    }
-
-    return currentProduct.imageCover;
+    const prod = this.product();
+    if (!prod) return '';
+    return prod.images?.[this.selectedImageIndex()] || prod.imageCover;
   }
 
   get hasMultipleImages(): boolean {
-    const currentProduct = this.product();
-    return currentProduct ? (currentProduct.images?.length || 0) > 1 : false;
+    return (this.product()?.images?.length || 0) > 1;
+  }
+
+  get isInCart(): boolean {
+    const id = this.product()?.id;
+    return !!id && this.cartService.isInCart(id);
+  }
+
+  get cartButtonText(): string {
+    return this.isInCart ? 'Remove from Cart' : 'Add to Cart';
+  }
+
+  get cartButtonIcon(): string {
+    return this.isInCart
+      ? 'assets/icons/remove-cart.svg'
+      : 'assets/icons/cart.svg';
+  }
+
+  get cartButtonClass(): string {
+    return this.isInCart ? 'btn-danger' : 'btn-outline';
+  }
+
+  getCartItemCount(): number {
+    return this.product()
+      ? this.cartService.getCartItemCount(this.product()!.id)
+      : 0;
+  }
+
+  toggleCart(): void {
+    this.isProcessing.set(true);
+
+    const id = this.product()?.id;
+    if (!id) return;
+
+    if (this.isInCart) {
+      this.confirmation.confirm(
+        {
+          title: 'Remove from Cart',
+          message: `Are you sure you want to remove "${
+            this.product()?.title ?? ''
+          }" from your cart?`,
+          confirmText: 'Yes, Remove',
+          cancelText: 'Cancel',
+        },
+        (confirmed) => {
+          if (confirmed) {
+            const prod = this.product();
+            if (prod) {
+              this.cartService.removeItem(prod.id).subscribe({
+                complete: () => this.isProcessing.set(false),
+                error: () => this.isProcessing.set(false),
+              });
+            } else {
+              this.isProcessing.set(false);
+            }
+          } else {
+            this.isProcessing.set(false);
+          }
+        }
+      );
+    } else {
+      const prod = this.product();
+      if (prod) {
+        this.cartService.addToCart(prod.id).subscribe({
+          complete: () => this.isProcessing.set(false),
+          error: () => this.isProcessing.set(false),
+        });
+      } else {
+        this.isProcessing.set(false);
+      }
+    }
+  }
+
+  updateCartQuantity(newCount: number): void {
+    const id = this.product()?.id;
+    if (!id || newCount < 0) return;
+
+    this.cartService.updateItem(id, newCount).subscribe();
   }
 }

@@ -16,7 +16,6 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { ToasterComponent } from '../../components/toaster/toaster.component';
 import { ConfirmationModalComponent } from '../../components/confirmation-modal/confirmation-modal.component';
 
-
 @Component({
   selector: 'app-layout',
   imports: [
@@ -48,6 +47,7 @@ export class LayoutComponent {
     { name: 'Products', path: '/products', icon: 'shopping-bag' },
     { name: 'Orders', path: '/orders', icon: 'package' },
     { name: 'Account', path: '/account', icon: 'user' },
+    { name: 'Cart', path: '/cart', icon: 'cart' },
   ]);
 
   toggleMobileSidebar(): void {

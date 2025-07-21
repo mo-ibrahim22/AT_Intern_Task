@@ -21,8 +21,9 @@
         </p>
 
         <div class="mt-3" (click)="$event.stopPropagation()">
-            <app-button [text]="'add to Cart'" [iconSrc]="'assets/icons/cart.svg'" iconPosition="left" size="sm"
-                variant="outline">
+            <app-button [text]="cartButtonText" [iconSrc]="cartButtonIcon" iconPosition="left" size="sm"
+                [customClass]="cartButtonClass" [disabled]="isProcessing()" [loading]="isProcessing()"
+                (clicked)="toggleCart($event)">
             </app-button>
         </div>
     </div>

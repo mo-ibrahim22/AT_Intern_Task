@@ -97,28 +97,33 @@
                 </div>
                 <!-- Quantity Controls (if item is in cart) -->
 
+                @if (isInCart) {
                 <div class="bg-primary-50 rounded-lg p-4">
                     <div class="flex items-center justify-between">
                         <span class="text-primary-700 font-medium">In Cart:</span>
                         <div class="flex items-center gap-3">
                             <app-button iconSrc="assets/icons/minus.svg" iconPosition="center" [iconOnly]="true"
-                                size="sm" [variant]="'outline'">
+                                size="sm" variant="outline" [disabled]="isProcessing()"
+                                (clicked)="updateCartQuantity(getCartItemCount() - 1)">
                             </app-button>
 
-                            <span class="font-bold text-lg w-8 text-center">{{1}}</span>
+                            <span class="font-bold text-lg w-8 text-center">{{ getCartItemCount() }}</span>
 
                             <app-button iconSrc="assets/icons/plus.svg" iconPosition="center" [iconOnly]="true"
-                                size="sm" [variant]="'outline'">
+                                size="sm" variant="outline" [disabled]="isProcessing()"
+                                (clicked)="updateCartQuantity(getCartItemCount() + 1)">
                             </app-button>
                         </div>
                     </div>
                 </div>
+                }
 
 
                 <!-- Add to Cart Button -->
                 <div class="pt-4">
-                    <app-button [text]="'Add to Cart'" [iconSrc]="'assets/icons/cart.svg'" iconPosition="left" size="lg"
-                        [fullWidth]="true">
+                    <app-button [text]="cartButtonText" [iconSrc]="cartButtonIcon" iconPosition="left" size="lg"
+                        [fullWidth]="true" [customClass]="cartButtonClass" [disabled]="isProcessing()"
+                        [loading]="isProcessing()" (clicked)="toggleCart()">
                     </app-button>
                 </div>
 
