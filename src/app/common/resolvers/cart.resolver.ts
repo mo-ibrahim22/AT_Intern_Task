@@ -22,6 +22,8 @@ export const cartResolver: ResolveFn<CartResponse | null> = (route, state) => {
   // Get cart data
   return cartService.getCart().pipe(
     map((cart) => {
+      console.log('Cart resolver - received cart:', cart);
+
       // Check if cart has items
       if (!cart || !cart.data?.products?.length) {
         toaster.show(

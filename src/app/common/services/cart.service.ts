@@ -98,6 +98,7 @@ export class CartService {
       })
       .pipe(
         tap((cart) => {
+          console.log('CartService - received cart response:', cart);
           this.cartSignal.set(cart);
           this.loadingSignal.set(false);
         }),

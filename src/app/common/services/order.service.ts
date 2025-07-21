@@ -1,8 +1,12 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environment/environment';
-import { OrderResponse, CreateOrderRequest } from '../models/order.model';
+import {
+  Order,
+  OrderResponse,
+  CreateOrderRequest,
+} from '../models/order.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
@@ -17,6 +21,17 @@ export class OrderService {
   private toaster = inject(ToasterService);
 
   private apiUrl = environment.apiUrl;
+
+  // ✅ Signal to temporarily store order
+  private currentOrder = signal<Order | null>(null);
+
+  setOrder(order: Order | null) {
+    this.currentOrder.set(order);
+  }
+
+  getOrder(): Order | null {
+    return this.currentOrder();
+  }
 
   private requireAuth(): boolean {
     if (!this.authService.isAuthenticated()) {
@@ -44,9 +59,7 @@ export class OrderService {
     return this.http.post<OrderResponse>(
       `${this.apiUrl}/api/v1/orders/${cartId}`,
       orderData,
-      {
-        headers: this.getHeaders(),
-      }
+      { headers: this.getHeaders() }
     );
   }
 
@@ -57,9 +70,7 @@ export class OrderService {
 
     return this.http.get<{ status: string; data: any[] }>(
       `${this.apiUrl}/api/v1/orders/user/${this.authService.user()?.name}`,
-      {
-        headers: this.getHeaders(),
-      }
+      { headers: this.getHeaders() }
     );
   }
 }

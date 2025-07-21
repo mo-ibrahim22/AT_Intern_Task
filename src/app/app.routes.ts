@@ -51,10 +51,6 @@ export const routes: Routes = [
         (m) => m.CheckoutComponent
       ),
     canActivate: [authGuard],
-    resolve: {
-      cart: () =>
-        import('./common/resolvers/cart.resolver').then((m) => m.cartResolver),
-    },
   },
   {
     path: 'order-confirmation',
