@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../common/services/cart.service';
 import { RouterModule } from '@angular/router';
@@ -9,14 +9,25 @@ import { ButtonComponent } from '../../components/button/button.component';
   standalone: true,
   imports: [CommonModule, RouterModule, ButtonComponent],
   templateUrl: './cart.component.html',
+  styleUrl: './cart.component.css',
 })
 export class CartComponent implements OnInit {
   private readonly cartService = inject(CartService);
 
   cartItems = this.cartService.cart;
   isLoading = this.cartService.isLoading;
-  total = this.cartService.totalPrice;
-  isEmpty = signal(false);
+  isEmpty = this.cartService.isEmpty;
+  hasItems = this.cartService.hasItems;
+  cartCount = this.cartService.cartCount;
+
+  // Price calculations
+  subtotal = computed(() => this.cartService.getSubtotal());
+  shipping = computed(() => this.cartService.getShipping());
+  tax = computed(() => this.cartService.getTax());
+  finalTotal = computed(() => this.cartService.getFinalTotal());
+
+  // UI state
+  isCheckingOut = signal(false);
 
   ngOnInit(): void {
     this.cartService.getCart().subscribe();
@@ -31,15 +42,33 @@ export class CartComponent implements OnInit {
   }
 
   removeItem(productId: string): void {
-    this.cartService.removeItem(productId); // confirm included
+    this.cartService.removeItemWithConfirmation(productId).subscribe();
   }
 
   clearCart(): void {
-    this.cartService.clearCart(); // confirm included
+    this.cartService.clearCartWithConfirmation().subscribe();
   }
 
-  goToCheckout(): void {
-    // Placeholder: navigate to checkout or show modal
-    console.log('Go to checkout!');
+  isProcessingItem(productId: string): boolean {
+    return this.cartService.isProcessingItem(productId);
+  }
+
+  getItemTotal(productId: string): number {
+    return this.cartService.getItemTotal(productId);
+  }
+
+  proceedToCheckout(): void {
+    this.isCheckingOut.set(true);
+
+    // Simulate checkout process
+    setTimeout(() => {
+      this.isCheckingOut.set(false);
+      // Here you would typically navigate to checkout or payment page
+      console.log('Proceeding to checkout with total:', this.finalTotal());
+    }, 2000);
+  }
+
+  continueShopping(): void {
+    // Navigate to products page
   }
 }

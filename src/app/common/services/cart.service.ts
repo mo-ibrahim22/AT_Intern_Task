@@ -19,6 +19,7 @@ import {
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
+import { ConfirmationService } from './confirmation.service';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
@@ -26,25 +27,30 @@ export class CartService {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toaster = inject(ToasterService);
+  private confirmation = inject(ConfirmationService);
 
   private apiUrl = environment.apiUrl;
 
   private cartSignal = signal<CartResponse | null>(null);
   private loadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
+  private processingItemSignal = signal<string | null>(null);
 
   readonly cart = this.cartSignal.asReadonly();
   readonly isLoading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
+  readonly processingItem = this.processingItemSignal.asReadonly();
   readonly cartCount = computed(() => this.cartSignal()?.numOfCartItems ?? 0);
   readonly totalPrice = computed(
     () => this.cartSignal()?.data?.totalCartPrice ?? 0
   );
+  readonly isEmpty = computed(() => this.cartCount() === 0);
+  readonly hasItems = computed(() => this.cartCount() > 0);
 
   private requireAuth(): boolean {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/signin']);
-      this.toaster.show('Authentication Required', 'error');
+      this.toaster.show('Please sign in to access your cart', 'warning');
       return false;
     }
     return true;
@@ -62,6 +68,7 @@ export class CartService {
     return (error: any) => {
       console.error(`${operation} failed:`, error);
       this.loadingSignal.set(false);
+      this.processingItemSignal.set(null);
 
       const message =
         error?.error?.message ||
@@ -99,7 +106,7 @@ export class CartService {
   addToCart(productId: string): Observable<CartResponse> {
     if (!this.requireAuth()) return EMPTY;
 
-    this.loadingSignal.set(true);
+    this.processingItemSignal.set(productId);
     this.errorSignal.set(null);
 
     const body: AddToCartRequest = { productId };
@@ -116,8 +123,8 @@ export class CartService {
         ),
         tap((cart) => {
           this.cartSignal.set(cart);
-          this.loadingSignal.set(false);
-          this.toaster.show('Added to Cart', 'success');
+          this.processingItemSignal.set(null);
+          this.toaster.show('Item added to cart successfully!', 'success');
         }),
         catchError(this.handleError('Add to cart'))
       );
@@ -127,10 +134,10 @@ export class CartService {
     if (!this.requireAuth()) return EMPTY;
 
     if (count <= 0) {
-      return this.removeItem(productId);
+      return this.removeItemWithConfirmation(productId);
     }
 
-    this.loadingSignal.set(true);
+    this.processingItemSignal.set(productId);
     this.errorSignal.set(null);
 
     const body: UpdateCartRequest = { count: count.toString() };
@@ -142,15 +149,15 @@ export class CartService {
       .pipe(
         tap((cart) => {
           this.cartSignal.set(cart);
-          this.loadingSignal.set(false);
-          this.toaster.show('Cart Updated', 'success');
+          this.processingItemSignal.set(null);
+          this.toaster.show('Cart updated successfully!', 'success');
         }),
         catchError(this.handleError('Update cart item'))
       );
   }
 
-  removeItem(productId: string): Observable<CartResponse> {
-    this.loadingSignal.set(true);
+  private removeItemDirect(productId: string): Observable<CartResponse> {
+    this.processingItemSignal.set(productId);
     this.errorSignal.set(null);
 
     return this.http
@@ -160,14 +167,73 @@ export class CartService {
       .pipe(
         tap((cart) => {
           this.cartSignal.set(cart);
-          this.loadingSignal.set(false);
-          this.toaster.show('Removed from Cart', 'success');
+          this.processingItemSignal.set(null);
+          this.toaster.show('Item removed from cart', 'success');
         }),
         catchError(this.handleError('Remove cart item'))
       );
   }
 
-  clearCart(): Observable<ClearCartResponse> {
+  removeItemWithConfirmation(productId: string): Observable<CartResponse> {
+    if (!this.requireAuth()) return EMPTY;
+
+    const product = this.getProductFromCart(productId);
+    const productName = product?.product?.title || 'this item';
+
+    return new Observable<CartResponse>((observer) => {
+      this.confirmation.confirm(
+        {
+          title: 'Remove Item from Cart',
+          message: `Are you sure you want to remove "${productName}" from your cart?`,
+          confirmText: 'Yes, Remove',
+          cancelText: 'Keep in Cart',
+        },
+        (confirmed: boolean) => {
+          if (confirmed) {
+            this.removeItemDirect(productId).subscribe({
+              next: (result) => observer.next(result),
+              error: (error) => observer.error(error),
+              complete: () => observer.complete(),
+            });
+          } else {
+            this.processingItemSignal.set(null);
+            observer.complete();
+          }
+        }
+      );
+    });
+  }
+
+  clearCartWithConfirmation(): Observable<ClearCartResponse> {
+    if (!this.requireAuth()) return EMPTY;
+
+    const itemCount = this.cartCount();
+    const totalPrice = this.totalPrice();
+
+    return new Observable<ClearCartResponse>((observer) => {
+      this.confirmation.confirm(
+        {
+          title: 'Clear Entire Cart',
+          message: `Are you sure you want to remove all ${itemCount} items from your cart? This will clear $${totalPrice} worth of items and cannot be undone.`,
+          confirmText: 'Yes, Clear Cart',
+          cancelText: 'Keep Items',
+        },
+        (confirmed: boolean) => {
+          if (confirmed) {
+            this.clearCartDirect().subscribe({
+              next: (result) => observer.next(result),
+              error: (error) => observer.error(error),
+              complete: () => observer.complete(),
+            });
+          } else {
+            observer.complete();
+          }
+        }
+      );
+    });
+  }
+
+  private clearCartDirect(): Observable<ClearCartResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -179,7 +245,7 @@ export class CartService {
         tap(() => {
           this.cartSignal.set(null);
           this.loadingSignal.set(false);
-          this.toaster.show('Cart Cleared', 'success');
+          this.toaster.show('Cart cleared successfully!', 'success');
         }),
         catchError(this.handleError('Clear cart'))
       );
@@ -206,6 +272,16 @@ export class CartService {
     return item?.count ?? 0;
   }
 
+  getProductFromCart(productId: string) {
+    return this.cartSignal()?.data?.products?.find(
+      (item) => item.product.id === productId || item.product._id === productId
+    );
+  }
+
+  isProcessingItem(productId: string): boolean {
+    return this.processingItemSignal() === productId;
+  }
+
   initializeCart(): void {
     if (this.authService.isAuthenticated()) {
       this.getCart().subscribe({
@@ -218,5 +294,27 @@ export class CartService {
 
   clearError(): void {
     this.errorSignal.set(null);
+  }
+
+  // Utility methods for cart calculations
+  getSubtotal(): number {
+    return this.totalPrice();
+  }
+
+  getShipping(): number {
+    return this.hasItems() ? (this.totalPrice() > 100 ? 0 : 10) : 0;
+  }
+
+  getTax(): number {
+    return Math.round(this.getSubtotal() * 0.08 * 100) / 100; // 8% tax
+  }
+
+  getFinalTotal(): number {
+    return this.getSubtotal() + this.getShipping() + this.getTax();
+  }
+
+  getItemTotal(productId: string): number {
+    const item = this.getProductFromCart(productId);
+    return item ? item.price * item.count : 0;
   }
 }

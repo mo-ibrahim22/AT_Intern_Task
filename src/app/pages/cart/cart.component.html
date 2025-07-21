@@ -1,56 +1,223 @@
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 text-primary-900">Shopping Cart</h1>
-
-    @if (isLoading()) {
-    <div class="text-center py-10 text-gray-600">Loading your cart...</div>
-    } @else if (isEmpty()) {
-    <div class="text-center py-10 text-gray-600">
-        Your cart is empty.
-        <a routerLink="/" class="text-primary-600 underline ml-2">Continue Shopping</a>
-    </div>
-    } @else {
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Cart Items -->
-        <div class="lg:col-span-2 space-y-6">
-            @for (item of cartItems()?.data?.products; track item._id) {
-            <div class="flex items-center bg-white shadow rounded-xl p-4 gap-4">
-                <img [src]="item.product.imageCover" [alt]="item.product.title"
-                    class="w-24 h-24 object-cover rounded-md border" />
-                <div class="flex-1">
-                    <h3 class="text-lg font-semibold text-primary-900">
-                        {{ item.product.title }}
-                    </h3>
-                    <p class="text-sm text-gray-500 mt-1">Price: {{ item.price }} EGP</p>
-                    <div class="mt-3 flex items-center gap-2">
-                        <button class="bg-gray-200 w-8 h-8 rounded"
-                            (click)="updateQuantity(item.product.id, item.count - 1)">-</button>
-                        <span class="text-sm font-medium">{{ item.count }}</span>
-                        <button class="bg-gray-200 w-8 h-8 rounded"
-                            (click)="updateQuantity(item.product.id, item.count + 1)">+</button>
-                    </div>
-                </div>
-                <button (click)="removeItem(item.product.id)">
-                    <img src="assets/icons/trash.svg" alt="Remove" class="w-5 h-5 opacity-70 hover:opacity-100" />
-                </button>
+<div class="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <div
+                class="mx-auto w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                <img src="assets/icons/cart.svg" alt="Shopping Cart" class="w-8 h-8 text-white" />
             </div>
+            <h1 class="text-4xl font-bold text-primary-900 mb-2">Shopping Cart</h1>
+            @if (hasItems()) {
+            <p class="text-primary-600">{{ cartCount() }} {{ cartCount() === 1 ? 'item' : 'items' }} in your cart</p>
             }
         </div>
 
-        <!-- Cart Summary -->
-        <div class="bg-white shadow rounded-xl p-6">
-            <h2 class="text-xl font-semibold mb-4 text-primary-900">Summary</h2>
-
-            <div class="flex justify-between text-lg font-bold text-primary-900 border-t pt-4">
-                <span>Total:</span>
-                <span>{{ total() }} EGP</span>
+        @if (isLoading()) {
+        <!-- Loading State -->
+        <div class="flex flex-col items-center justify-center py-16">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+            <p class="text-primary-600 text-lg">Loading your cart...</p>
+        </div>
+        } @else if (isEmpty()) {
+        <!-- Empty Cart State -->
+        <div class="max-w-md mx-auto text-center">
+            <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-8">
+                <div class="mx-auto w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mb-6">
+                    <img src="assets/icons/cart.svg" alt="Empty Cart" class="w-10 h-10 text-primary-400" />
+                </div>
+                <h2 class="text-2xl font-bold text-primary-900 mb-4">Your cart is empty</h2>
+                <p class="text-primary-600 mb-6">
+                    Looks like you haven't added any items to your cart yet. Start shopping to fill it up!
+                </p>
+                <app-button text="Start Shopping" iconSrc="assets/icons/shopping-bag.svg" iconPosition="left" size="lg"
+                    [fullWidth]="true"
+                    [customClass]="'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl'"
+                    routerLink="/products">
+                </app-button>
             </div>
+        </div>
+        } @else {
+        <!-- Cart Content -->
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Cart Items Section -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-6">
+                        <h2 class="text-2xl font-bold text-primary-900 mb-6 flex items-center">
+                            <img src="assets/icons/shopping-bag.svg" alt="Items" class="w-6 h-6 me-3" />
+                            Cart Items
+                        </h2>
 
-            <div class="mt-6 space-y-3">
-                <app-button text="Checkout" class="w-full" variant="primary" (click)="goToCheckout()"></app-button>
-                <app-button text="Clear Cart" class="w-full" variant="danger" (click)="clearCart()"></app-button>
-                <a routerLink="/" class="block text-center text-sm text-gray-500 hover:underline">Continue Shopping</a>
+                        <div class="space-y-4">
+                            @for (item of cartItems()?.data?.products; track item._id) {
+                            <div class="group relative bg-primary-50 rounded-xl p-4 border border-primary-200 hover:shadow-md transition-all duration-300"
+                                [class.opacity-50]="isProcessingItem(item.product.id)"
+                                [class.pointer-events-none]="isProcessingItem(item.product.id)">
+
+                                <!-- Processing Overlay -->
+                                @if (isProcessingItem(item.product.id)) {
+                                <div
+                                    class="absolute inset-0 bg-white/50 rounded-xl flex items-center justify-center z-10">
+                                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                                </div>
+                                }
+
+                                <div class="flex items-start gap-4">
+                                    <!-- Product Image -->
+                                    <div class="flex-shrink-0">
+                                        <img [src]="item.product.imageCover" [alt]="item.product.title"
+                                            class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border border-primary-200 group-hover:scale-105 transition-transform duration-300" />
+                                    </div>
+
+                                    <!-- Product Details -->
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-semibold text-primary-900 mb-1 line-clamp-2">
+                                            {{ item.product.title }}
+                                        </h3>
+                                        <p class="text-sm text-primary-600 mb-2">
+                                            {{ item.product.category.name }}
+                                        </p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-lg font-bold text-primary-900">
+                                                ${{ item.price }} <span
+                                                    class="text-sm font-normal text-primary-600">each</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="text-sm text-primary-600">Total</div>
+                                                <div class="text-lg font-bold text-primary-900">
+                                                    ${{ getItemTotal(item.product.id) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quantity Controls -->
+                                <div class="flex items-center justify-between mt-4 pt-4 border-t border-primary-200">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-sm font-medium text-primary-700">Quantity:</span>
+                                        <div
+                                            class="flex items-center bg-white rounded-lg border border-primary-300 shadow-sm">
+                                            <app-button iconSrc="assets/icons/minus.svg" [iconOnly]="true" size="sm"
+                                                variant="ghost"
+                                                [customClass]="'rounded-r-none border-r border-primary-200'"
+                                                [disabled]="isProcessingItem(item.product.id)"
+                                                (clicked)="updateQuantity(item.product.id, item.count - 1)">
+                                            </app-button>
+
+                                            <span class="px-4 py-2 text-center font-semibold text-primary-900 min-w-12">
+                                                {{ item.count }}
+                                            </span>
+
+                                            <app-button iconSrc="assets/icons/plus.svg" [iconOnly]="true" size="sm"
+                                                variant="ghost"
+                                                [customClass]="'rounded-l-none border-l border-primary-200'"
+                                                [disabled]="isProcessingItem(item.product.id)"
+                                                (clicked)="updateQuantity(item.product.id, item.count + 1)">
+                                            </app-button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Remove Button -->
+                                    <app-button text="Remove" iconSrc="assets/icons/trash.svg" iconPosition="left"
+                                        size="sm" variant="danger" [customClass]="'hover:bg-danger-600 hover:shadow-md'"
+                                        [disabled]="isProcessingItem(item.product.id)"
+                                        (clicked)="removeItem(item.product.id)">
+                                    </app-button>
+                                </div>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Clear Cart Button -->
+                        <div class="mt-6 pt-6 border-t border-primary-200">
+                            <app-button text="Clear Entire Cart" iconSrc="assets/icons/trash.svg" iconPosition="left"
+                                variant="outline"
+                                [customClass]="'border-danger-300 text-danger-600 hover:bg-danger-50 hover:border-danger-400'"
+                                (clicked)="clearCart()">
+                            </app-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Section -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-xl border border-primary-200 p-6 sticky top-8">
+                        <h2 class="text-2xl font-bold text-primary-900 mb-6 flex items-center">
+                            <img src="assets/icons/money.svg" alt="Summary" class="w-6 h-6 me-3" />
+                            Order Summary
+                        </h2>
+
+                        <!-- Price Breakdown -->
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-primary-700">Subtotal ({{ cartCount() }} items)</span>
+                                <span class="font-semibold text-primary-900">${{ subtotal() }}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-primary-700 flex items-center">
+                                    Shipping
+                                    @if (shipping() === 0) {
+                                    <span
+                                        class="ms-2 text-xs bg-success-100 text-success-700 px-2 py-1 rounded-full">FREE</span>
+                                    }
+                                </span>
+                                <span class="font-semibold text-primary-900">
+                                    @if (shipping() === 0) {
+                                    <span class="text-success-600">Free</span>
+                                    } @else {
+                                    ${{ shipping() }}
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-primary-700">Tax (8%)</span>
+                                <span class="font-semibold text-primary-900">${{ tax() }}</span>
+                            </div>
+
+                            @if (shipping() === 0 && subtotal() <= 100) { <div
+                                class="bg-info-50 border border-info-200 rounded-lg p-3">
+                                <p class="text-sm text-info-700">
+                                    <img src="assets/icons/info.svg" alt="Info" class="w-4 h-4 inline me-1" />
+                                    Add ${{ 100 - subtotal() }} more for free shipping!
+                                </p>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Total -->
+                    <div class="border-t border-primary-200 pt-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-primary-900">Total</span>
+                            <span class="text-2xl font-bold text-primary-900">${{ finalTotal() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-3">
+                        <app-button text="Proceed to Checkout" iconSrc="assets/icons/success.svg" iconPosition="left"
+                            size="lg" [fullWidth]="true" variant="success" [loading]="isCheckingOut()"
+                            [disabled]="isCheckingOut()" (clicked)="proceedToCheckout()">
+                        </app-button>
+
+                        <app-button text="Continue Shopping" iconSrc="assets/icons/shopping-bag.svg" iconPosition="left"
+                            variant="outline" customClass="mt-2" [fullWidth]="true" routerLink="/products">
+                        </app-button>
+                    </div>
+
+                    <!-- Security Badge -->
+                    <div class="mt-6 pt-6 border-t border-primary-200">
+                        <div class="flex items-center justify-center text-sm text-primary-600">
+                            <img src="assets/icons/success.svg" alt="Secure" class="w-4 h-4 me-2" />
+                            Secure checkout guaranteed
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     }
+</div>
 </div>

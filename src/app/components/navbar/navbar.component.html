@@ -20,7 +20,8 @@
         <!-- User Actions -->
         <div class="flex items-center space-x-4">
             <!-- Cart Icon -->
-            <app-button variant="ghost" iconSrc="assets/icons/cart.svg" [iconOnly]="true" [badge]="'3'">
+            <app-button variant="ghost" iconSrc="assets/icons/cart.svg" [iconOnly]="true"
+                [badge]="cartCount() > 0 ? cartCount().toString() : ''" routerLink="/cart">
             </app-button>
 
             <!-- User Menu -->

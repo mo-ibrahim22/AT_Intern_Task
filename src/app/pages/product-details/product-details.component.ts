@@ -98,47 +98,21 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   toggleCart(): void {
-    this.isProcessing.set(true);
-
     const id = this.product()?.id;
     if (!id) return;
 
     if (this.isInCart) {
-      this.confirmation.confirm(
-        {
-          title: 'Remove from Cart',
-          message: `Are you sure you want to remove "${
-            this.product()?.title ?? ''
-          }" from your cart?`,
-          confirmText: 'Yes, Remove',
-          cancelText: 'Cancel',
-        },
-        (confirmed) => {
-          if (confirmed) {
-            const prod = this.product();
-            if (prod) {
-              this.cartService.removeItem(prod.id).subscribe({
-                complete: () => this.isProcessing.set(false),
-                error: () => this.isProcessing.set(false),
-              });
-            } else {
-              this.isProcessing.set(false);
-            }
-          } else {
-            this.isProcessing.set(false);
-          }
-        }
-      );
+      this.isProcessing.set(true);
+      this.cartService.removeItemWithConfirmation(id).subscribe({
+        complete: () => this.isProcessing.set(false),
+        error: () => this.isProcessing.set(false),
+      });
     } else {
-      const prod = this.product();
-      if (prod) {
-        this.cartService.addToCart(prod.id).subscribe({
-          complete: () => this.isProcessing.set(false),
-          error: () => this.isProcessing.set(false),
-        });
-      } else {
-        this.isProcessing.set(false);
-      }
+      this.isProcessing.set(true);
+      this.cartService.addToCart(id).subscribe({
+        complete: () => this.isProcessing.set(false),
+        error: () => this.isProcessing.set(false),
+      });
     }
   }
 

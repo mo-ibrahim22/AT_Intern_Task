@@ -42,30 +42,15 @@ export class ProductCardComponent {
 
   toggleCart(event: Event): void {
     event.stopPropagation();
-    this.isProcessing.set(true);
 
     if (this.isInCart) {
-      this.confirmation.confirm(
-        {
-          title: 'Remove from Cart',
-          message: `Are you sure you want to remove "${
-            this.product().title
-          }" from your cart?`,
-          confirmText: 'Yes, Remove',
-          cancelText: 'Cancel',
-        },
-        (confirmed) => {
-          if (confirmed) {
-            this.cartService.removeItem(this.product().id).subscribe({
-              complete: () => this.isProcessing.set(false),
-              error: () => this.isProcessing.set(false),
-            });
-          } else {
-            this.isProcessing.set(false);
-          }
-        }
-      );
+      this.isProcessing.set(true);
+      this.cartService.removeItemWithConfirmation(this.product().id).subscribe({
+        complete: () => this.isProcessing.set(false),
+        error: () => this.isProcessing.set(false),
+      });
     } else {
+      this.isProcessing.set(true);
       this.cartService.addToCart(this.product().id).subscribe({
         complete: () => this.isProcessing.set(false),
         error: () => this.isProcessing.set(false),

@@ -1,0 +1,123 @@
+/* Custom animations for cart interactions */
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes itemSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+.cart-item {
+  animation: itemSlideIn 0.3s ease-out;
+}
+
+.cart-item.removing {
+  animation: itemSlideOut 0.3s ease-in forwards;
+}
+
+/* Quantity input styling */
+.quantity-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hover effects for cart items */
+.cart-item-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading overlay */
+.processing-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* Price highlight animation */
+@keyframes priceUpdate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.price-updated {
+  animation: priceUpdate 0.3s ease-in-out;
+}
+
+/* Sticky summary positioning */
+.sticky-summary {
+  position: sticky;
+  top: 2rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .cart-item-container {
+    padding: 1rem;
+  }
+
+  .sticky-summary {
+    position: static;
+  }
+}
+
+/* Success state for free shipping */
+.free-shipping-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Custom scrollbar for cart items */
+.cart-items-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-items-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.cart-items-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.cart-items-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
