@@ -1,6 +1,7 @@
 @if (isOpen()) {
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/75 p-4">
-    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 scale-100"
+        appClickOutside (clickOutside)="onResponse(false)">
         <div class="flex items-center mb-4">
             <div class="flex-shrink-0">
                 <img src="assets/icons/warning.svg" alt="Warning" class="w-6 h-6 text-warning-500" />

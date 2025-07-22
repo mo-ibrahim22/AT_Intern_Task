@@ -2,11 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
 import { ConfirmationConfig } from '../../common/models/confirmation.model';
+import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 
 @Component({
   selector: 'app-confirmation-modal',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, ClickOutsideDirective],
   templateUrl: './confirmation-modal.component.html',
   styleUrl: './confirmation-modal.component.css',
 })
