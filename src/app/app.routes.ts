@@ -26,6 +26,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'otp-verification',
+    loadComponent: () =>
+      import('./pages/auth/otp-verification/otp-verification.component').then(
+        (m) => m.OtpVerificationComponent
+      ),
+  },
+  {
     path: 'products',
     loadComponent: () =>
       import('./pages/product/product.component').then(

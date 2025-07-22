@@ -53,8 +53,11 @@ export class SigninComponent implements OnInit {
 
       this.authService.signin(signinData).subscribe({
         next: (response) => {
-          this.toaster.show(`Welcome back, ${response.user.name}!`, 'success');
-          this.router.navigate(['/home']);
+          this.toaster.show(
+            'Sign in successful! Please verify your account.',
+            'success'
+          );
+          this.router.navigate(['/otp-verification']);
         },
         error: (error) => {
           console.error('Signin error:', error);

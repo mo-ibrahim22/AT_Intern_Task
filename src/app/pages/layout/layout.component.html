@@ -1,5 +1,5 @@
 <!-- Main Layout Structure (only shown when authenticated) -->
-@if (authService.isAuthenticated()) {
+@if (authService.isAuthenticated() && !hasAuthRoute()) {
 <div class="min-h-screen bg-primary-50">
     <!-- Navbar -->
     <app-navbar [navItems]="navItems()" [user]="authService.user()" (toggleMobileSidebar)="toggleMobileSidebar()"
@@ -21,7 +21,7 @@
 }
 
 <!-- Show router outlet without layout for non-authenticated users -->
-@if (!authService.isAuthenticated()) {
+@if (hasAuthRoute()) {
 <router-outlet></router-outlet>
 }
 

@@ -1,0 +1,106 @@
+/* OTP Input Animation */
+@keyframes inputFocus {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.otp-input:focus {
+  animation: inputFocus 0.3s ease-in-out;
+}
+
+/* Timer Animation */
+@keyframes timerPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.timer-active {
+  animation: timerPulse 1s infinite;
+}
+
+/* Success State Animation */
+@keyframes successBounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+.success-animation {
+  animation: successBounce 1s ease-in-out;
+}
+
+/* Expired State Animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+.expired-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Input Focus Ring Enhancement */
+.otp-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 480px) {
+  .otp-input {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.125rem;
+  }
+}
+
+Loading State
+.loading-overlay {
+  backdrop-filter: blur(1px);
+}
+
+/* Auto-fill detection */
+.otp-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+}
