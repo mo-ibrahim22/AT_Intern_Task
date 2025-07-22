@@ -60,12 +60,14 @@
                                     <!-- Product Image -->
                                     <div class="flex-shrink-0">
                                         <img [src]="item.product.imageCover" [alt]="item.product.title"
-                                            class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border border-primary-200 group-hover:scale-105 transition-transform duration-300" />
+                                            class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border border-primary-200 group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                            routerLink="/product-details/{{ item.product.id }}" />
                                     </div>
 
                                     <!-- Product Details -->
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-primary-900 mb-1 line-clamp-2">
+                                        <h3 class="text-lg font-semibold text-primary-900 mb-1 line-clamp-2 cursor-pointer"
+                                            routerLink="/product-details/{{ item.product.id }}">
                                             {{ item.product.title }}
                                         </h3>
                                         <p class="text-sm text-primary-600 mb-2">
